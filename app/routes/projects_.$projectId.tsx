@@ -44,16 +44,16 @@ export default function Project() {
       </h2>
       <ul>
         <li>
-          <a href={`/projects/${project}/notes/1`}>Notes A</a>
+          <a href={`/projects/${project}/notes/1`}>Notes 1</a>
         </li>
         <li>
-          <a href={`/projects/${project}/notes/2`}>Notes B</a>
+          <a href={`/projects/${project}/notes/2`}>Notes 2</a>
         </li>
         <li>
-          <a href={`/projects/${project}/notes/3`}>Notes C</a>
+          <a href={`/projects/${project}/notes/3`}>Notes 3</a>
         </li>
         <li>
-          <a href={`/projects/${project}/notes/4`}>Notes D</a>
+          <a href={`/projects/${project}/notes/4`}>Notes 4</a>
         </li>
       </ul>
     </>
