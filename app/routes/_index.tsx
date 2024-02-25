@@ -12,6 +12,9 @@ export default function Index() {
     <div>
       <h1>Projects</h1>
 
+      <div>
+        <a href="projects/new">+new project</a>
+      </div>
       <ul>
         <li>
           <a href="projects/1">test project1</a>
