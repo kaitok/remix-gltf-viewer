@@ -1,13 +1,20 @@
 import type { MetaFunction } from '@remix-run/node'
+import { PrismaClient } from '@prisma/client'
+import { json } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: 'New Remix App' },
-    { name: 'description', content: 'Welcome to Remix!' },
-  ]
+  return [{ title: 'Field' }]
+}
+
+export const loader = async () => {
+  const prisma = new PrismaClient()
+  const projects = await prisma.project.findMany()
+  return json({ projects })
 }
 
 export default function Index() {
+  const { projects } = useLoaderData<typeof loader>()
   return (
     <div>
       <h1>Projects</h1>
@@ -16,12 +23,13 @@ export default function Index() {
         <a href="projects/new">+new project</a>
       </div>
       <ul>
-        <li>
-          <a href="projects/1">test project1</a>
-        </li>
-        <li>
-          <a href="projects/2">test project2</a>
-        </li>
+        {projects.map((v) => {
+          return (
+            <li>
+              <a href={'projects/' + v.id}>{v.title}</a>
+            </li>
+          )
+        })}
       </ul>
     </div>
   )
