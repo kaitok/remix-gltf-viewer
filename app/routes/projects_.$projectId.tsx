@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { Outlet } from '@remix-run/react'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const prisma = new PrismaClient()
@@ -10,19 +9,33 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       id: Number(params.projectId),
     },
   })
-  return json({ project })
+  const notes = await prisma.note.findMany({
+    where: {
+      projectId: Number(params.projectId),
+    },
+  })
+  return json({ project, notes })
 }
 
 export default function Project() {
-  const { project } = useLoaderData<typeof loader>()
+  const { project, notes } = useLoaderData<typeof loader>()
   return (
     <>
       <h1>{project?.title}</h1>
 
+      <div>
+        <a href={'/projects/' + project?.id + '/notes/new'}>+new note</a>
+      </div>
       <ul>
-        <li>
-          <a href={`/projects/${project?.id}/notes/1`}>Notes 1</a>
-        </li>
+        {notes.map((v) => {
+          return (
+            <li>
+              <a href={`/projects/${project?.id}/notes/1`}>
+                {v.title} {v.createdAt}
+              </a>
+            </li>
+          )
+        })}
       </ul>
     </>
   )
