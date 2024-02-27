@@ -23,6 +23,7 @@ export default function App() {
         <Links />
       </head>
       <body style={{ fontFamily: 'system-ui, sans-serif' }}>
+        <a href="/">Field</a>
         <Outlet />
         <ScrollRestoration />
         <Scripts />
