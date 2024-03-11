@@ -17,18 +17,22 @@ export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
     <div>
-      <h1>Projects</h1>
-
-      <div>
-        <a href="projects/new">+new project</a>
+      <div className="button">
+        <a
+          href="projects/new"
+          type="button"
+          className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+        >
+          New Project
+        </a>
       </div>
 
-      <div className="flex flex-col gap-5">
+      <div className="flex gap-5 mt-2">
         {projects.map((v) => {
           return (
             <a
               href={'projects/' + v.id}
-              className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
+              className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 min-w-64"
             >
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-90">
                 {v.title}
