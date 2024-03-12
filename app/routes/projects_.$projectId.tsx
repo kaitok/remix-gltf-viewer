@@ -23,7 +23,7 @@ export default function Project() {
   return (
     <>
       <div className="mt-10">
-        <div className="flex flex-row">
+        <div className="flex flex-row gap-20">
           <div className="basis-1/3">
             <h1 className="text-4xl">{project?.title}</h1>
             <p className="text-l">description</p>
@@ -50,7 +50,7 @@ export default function Project() {
               })}
             </div>
           </div>
-          <div className="basis-2/3">
+          <div className="basis-2/3 bg-gray-200">
             <Model />
           </div>
         </div>
