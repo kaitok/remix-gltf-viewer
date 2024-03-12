@@ -22,28 +22,34 @@ export default function Project() {
   return (
     <>
       <div className="mt-10">
-        <h1 className="text-4xl">{project?.title}</h1>
-        <p className="text-l">description</p>
+        <div className="flex flex-row">
+          <div className="basis-1/3">
+            <h1 className="text-4xl">{project?.title}</h1>
+            <p className="text-l">description</p>
 
-        <div className="mt-10">
-          <a
-            href={'/projects/' + project?.id + '/notes/new'}
-            className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-          >
-            +new note
-          </a>
-        </div>
-        <div className="flex flex-col gap-5 mt-5">
-          {notes.map((v) => {
-            return (
+            <div className="mt-10">
               <a
-                href={`/projects/${project?.id}/notes/1`}
-                className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 min-w-64"
+                href={'/projects/' + project?.id + '/notes/new'}
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
               >
-                <p className="text-lg">{v.title}</p> {v.createdAt}
+                +new note
               </a>
-            )
-          })}
+            </div>
+
+            <div className="flex flex-col gap-5 mt-5">
+              {notes.map((v) => {
+                return (
+                  <a
+                    href={`/projects/${project?.id}/notes/1`}
+                    className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 min-w-64"
+                  >
+                    <p className="text-lg">{v.title}</p> {v.createdAt}
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+          <div className="basis-2/3 bg-red-600"></div>
         </div>
       </div>
     </>
