@@ -16,7 +16,7 @@ export const loader = async () => {
 export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
-    <div>
+    <div className="mt-5">
       <div className="button">
         <a
           href="projects/new"

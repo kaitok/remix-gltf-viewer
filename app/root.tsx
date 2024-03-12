@@ -28,7 +28,7 @@ export default function App() {
           <nav className="bg-white border-gray-200 px-5 lg:px-6 py-5 border-b-black border-b-[.5px]">
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
               <a href="/" className="flex items-center">
-                <span className="self-center text-xl font-semibold whitespace-nowrap">
+                <span className="self-center text-2xl font-semibold whitespace-nowrap">
                   Field
                 </span>
               </a>
