@@ -7,3 +7,7 @@ node_modules
 
 # postgres
 postgres-data
+
+
+# 3d models
+app/models
