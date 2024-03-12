@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import Model from '~/components/model'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const prisma = new PrismaClient()
@@ -49,7 +50,9 @@ export default function Project() {
               })}
             </div>
           </div>
-          <div className="basis-2/3 bg-red-600"></div>
+          <div className="basis-2/3">
+            <Model />
+          </div>
         </div>
       </div>
     </>
