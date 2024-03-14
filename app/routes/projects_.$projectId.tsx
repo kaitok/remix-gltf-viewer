@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import Model from '~/components/model'
+import { dateFormat } from '~/utils/dateformat'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const prisma = new PrismaClient()
@@ -26,6 +27,7 @@ export default function Project() {
         <div className="flex flex-row gap-20">
           <div className="basis-1/3">
             <h1 className="text-4xl">{project?.title}</h1>
+            <p className="text-l">{dateFormat(project?.updatedAt)}</p>
             <p className="text-l">description</p>
 
             <div className="mt-10">
@@ -44,7 +46,8 @@ export default function Project() {
                     href={`/projects/${project?.id}/notes/1`}
                     className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 min-w-64"
                   >
-                    <p className="text-lg">{v.title}</p> {v.createdAt}
+                    <p className="text-lg">{v.title}</p>
+                    {dateFormat(v.createdAt)}
                   </a>
                 )
               })}

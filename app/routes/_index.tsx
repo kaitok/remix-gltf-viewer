@@ -2,6 +2,7 @@ import type { MetaFunction } from '@remix-run/node'
 import { PrismaClient } from '@prisma/client'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { dateFormat } from '~/utils/dateformat'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Field' }]
@@ -38,6 +39,7 @@ export default function Index() {
                 {v.title}
               </h5>
               <p className="font-normal text-gray-700">description</p>
+              <p> {dateFormat(v.createdAt)}</p>
             </a>
           )
         })}
