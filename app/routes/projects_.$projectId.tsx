@@ -3,6 +3,8 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import Model from '~/components/model'
 import { dateFormat } from '~/utils/dateformat'
+import Button from '~/components/Button'
+import LinkButton from '~/components/LinkButton'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const prisma = new PrismaClient()
@@ -23,20 +25,48 @@ export default function Project() {
   const { project, notes } = useLoaderData<typeof loader>()
   return (
     <>
-      <div className="mt-10">
-        <div className="flex flex-row gap-20">
-          <div className="basis-1/3">
-            <h1 className="text-4xl">{project?.title}</h1>
-            <p className="text-l">{dateFormat(project?.updatedAt)}</p>
-            <p className="text-l">description</p>
+      <div className="mt-5">
+        <div className="flex flex-row gap-8">
+          <div className="basis-1/3 flex flex-col gap-3">
+            <div className="flex flex-col">
+              <div className="flex justify-between">
+                <div className="flex flex-col">
+                  <h2 className="text-3xl">{project?.title}</h2>
+                  <p className="text-l">{dateFormat(project?.updatedAt)}</p>
+                </div>
 
+                <div className="pt-1">
+                  <Button
+                    size="sm"
+                    textColor="black"
+                    bgColor="white"
+                    border={true}
+                  >
+                    Edit
+                  </Button>
+                  <Button size="sm" textColor="white" bgColor="red">
+                    Delete
+                  </Button>
+                </div>
+              </div>
+              <div>
+                <p className="text-l pt-2">
+                  description asdfjwoein spodcpowenp npcwiepeinp npcwiencpiwe p
+                  inwpeincwpeinpweicnwpeinkcn wpenfpekcn asdfcwn pwneicnpwien.
+                </p>
+              </div>
+            </div>
             <div className="mt-10">
-              <a
+              <h2 className="text-2xl">Notes</h2>
+            </div>
+            <div>
+              <LinkButton
                 href={'/projects/' + project?.id + '/notes/new'}
-                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+                textColor="white"
+                bgColor="black"
               >
                 +new note
-              </a>
+              </LinkButton>
             </div>
 
             <div className="flex flex-col gap-5 mt-5">
