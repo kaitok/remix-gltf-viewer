@@ -101,7 +101,7 @@ export default function Project() {
                 return (
                   <a
                     href={`/projects/${project?.id}/notes/1`}
-                    className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 min-w-64"
+                    className="block max-w-sm p-6 bg-white border border-gray-200 rounded-sm shadow hover:bg-gray-100 min-w-64"
                   >
                     <p className="text-lg">{v.title}</p>
                     {dateFormat(v.createdAt)}
