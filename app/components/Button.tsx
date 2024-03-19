@@ -4,12 +4,14 @@ const Button = ({
   bgColor,
   textColor,
   border,
+  onClick,
 }: {
   size?: string
   children: string
   bgColor: string
   textColor: string
   border?: boolean
+  onClick?: () => void
 }) => {
   let style = 'py-2.5 px-5 me-2 mb-2 text-sm font-medium'
   if (size == 'sm') {
@@ -27,6 +29,7 @@ const Button = ({
     <button
       type="button"
       className={`${style} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 `}
+      onClick={onClick}
     >
       {children}
     </button>

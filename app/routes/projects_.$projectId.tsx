@@ -5,6 +5,8 @@ import Model from '~/components/model'
 import { dateFormat } from '~/utils/dateformat'
 import Button from '~/components/Button'
 import LinkButton from '~/components/LinkButton'
+import { useState, useRef } from 'react'
+import ConfirmModal from '~/components/ConfirmModal'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const prisma = new PrismaClient()
@@ -23,9 +25,22 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function Project() {
   const { project, notes } = useLoaderData<typeof loader>()
+  const [open, setOpen] = useState(false)
+  const cancelButtonRef = useRef(null)
+  const handleClickDelete = () => {
+    setOpen(true)
+  }
+
   return (
     <>
       <div className="mt-5">
+        <ConfirmModal
+          open={open}
+          setOpen={setOpen}
+          title="Are you sure you want to delete this project?"
+          description="This project will be deleted immediately, You can't undo this action."
+          execButtonTitle="Delete"
+        />
         <div className="flex flex-row gap-8">
           <div className="basis-1/3 flex flex-col gap-3">
             <div className="flex flex-col">
@@ -44,7 +59,12 @@ export default function Project() {
                   >
                     Edit
                   </Button>
-                  <Button size="sm" textColor="white" bgColor="red">
+                  <Button
+                    size="sm"
+                    textColor="white"
+                    bgColor="red"
+                    onClick={handleClickDelete}
+                  >
                     Delete
                   </Button>
                 </div>
