@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useNavigate } from '@remix-run/react'
 import Model from '~/components/model'
 import { dateFormat } from '~/utils/dateformat'
 import Button from '~/components/Button'
@@ -25,10 +25,16 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function Project() {
   const { project, notes } = useLoaderData<typeof loader>()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const cancelButtonRef = useRef(null)
   const handleClickDelete = () => {
     setOpen(true)
+  }
+
+  const handleDelete = () => {
+    // TODO delete project by prisma
+    navigate('/')
   }
 
   return (
@@ -40,6 +46,7 @@ export default function Project() {
           title="Are you sure you want to delete this project?"
           description="This project will be deleted immediately, You can't undo this action."
           execButtonTitle="Delete"
+          handleExecButton={handleDelete}
         />
         <div className="flex flex-row gap-8">
           <div className="basis-1/3 flex flex-col gap-3">

@@ -9,14 +9,21 @@ export default function ConfirmModal({
   title,
   description,
   execButtonTitle,
+  handleExecButton,
 }: {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   title: string
   description: string
   execButtonTitle: string
+  handleExecButton: () => void
 }) {
   const cancelButtonRef = useRef(null)
+
+  const execButton = () => {
+    setOpen(false)
+    handleExecButton()
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -75,7 +82,7 @@ export default function ConfirmModal({
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={() => setOpen(false)}
+                    onClick={execButton}
                   >
                     {execButtonTitle}
                   </button>
