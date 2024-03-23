@@ -49,14 +49,13 @@ export default function Project() {
           handleExecButton={handleDelete}
         />
         <div className="flex flex-row gap-8">
-          <div className="basis-1/3 flex flex-col gap-3">
+          <div className="basis-1/3 flex flex-col gap-3 min-w-96">
             <div className="flex flex-col">
               <div className="flex justify-between">
                 <div className="flex flex-col">
                   <h2 className="text-3xl">{project?.title}</h2>
                   <p className="text-l">{dateFormat(project?.updatedAt)}</p>
                 </div>
-
                 <div className="pt-1">
                   <Button
                     size="sm"
@@ -84,16 +83,21 @@ export default function Project() {
               </div>
             </div>
             <div className="mt-10">
-              <h2 className="text-2xl">Notes</h2>
-            </div>
-            <div>
-              <LinkButton
-                href={'/projects/' + project?.id + '/notes/new'}
-                textColor="white"
-                bgColor="black"
-              >
-                +new note
-              </LinkButton>
+              <div className="flex justify-between">
+                <div>
+                  <h2 className="text-2xl">Notes</h2>
+                </div>
+                <div>
+                  <LinkButton
+                    size="sm"
+                    href={'/projects/' + project?.id + '/notes/new'}
+                    textColor="white"
+                    bgColor="blue"
+                  >
+                    New
+                  </LinkButton>
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col gap-5 mt-5">
