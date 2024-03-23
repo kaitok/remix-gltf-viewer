@@ -7,6 +7,7 @@ const LinkButton = ({
   size,
   bgColor,
   border,
+  className,
 }: {
   href: string
   textColor: string
@@ -14,10 +15,11 @@ const LinkButton = ({
   size?: string
   bgColor?: string
   border?: boolean
+  className?: string
 }) => {
-  let style = 'py-2.5 px-5 me-2 mb-2 text-sm font-medium'
+  let style = 'py-2.5 px-5 text-sm font-medium'
   if (size == 'sm') {
-    style = 'py-[0.45rem] px-3 me-1 mb- text-xs font-sm'
+    style = 'h-8 min-w-12 py-[0.45rem] text-xs font-sm'
   }
   if (border) {
     style += ' border'
@@ -29,7 +31,10 @@ const LinkButton = ({
   return (
     <a
       href={href}
-      className={`block ${style} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 `}
+      className={
+        `text-center block ${style} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 ` +
+        className
+      }
     >
       {children}
     </a>

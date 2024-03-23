@@ -24,7 +24,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 export default function New() {
   return (
     <>
-      <h1>New Project</h1>
+      <h1>New Note</h1>
       <Form method="post">
         <input type="text" name="title" placeholder="title" />
         <button type="submit">Create</button>

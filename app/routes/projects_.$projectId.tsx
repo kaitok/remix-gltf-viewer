@@ -56,7 +56,7 @@ export default function Project() {
                   <h2 className="text-3xl">{project?.title}</h2>
                   <p className="text-l">{dateFormat(project?.updatedAt)}</p>
                 </div>
-                <div className="pt-1">
+                <div className="pt-1 flex gap-1">
                   <Button
                     size="sm"
                     textColor="black"
@@ -100,7 +100,7 @@ export default function Project() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-5 mt-5">
+            <div className="flex flex-col gap-4">
               {notes.map((v) => {
                 return (
                   <a

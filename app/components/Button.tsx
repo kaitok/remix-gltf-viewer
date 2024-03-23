@@ -14,9 +14,9 @@ const Button = ({
   border?: boolean
   onClick?: () => void
 }) => {
-  let style = 'py-2.5 px-5 me-2 mb-2 text-sm font-medium'
+  let style = 'py-2.5 px-5 text-sm font-medium'
   if (size == 'sm') {
-    style = 'py-1.5 px-3 me-1 mb-1 text-xs font-sm'
+    style = 'h-8 min-w-12 py-1.5 px-3 text-xs font-sm'
   }
   if (border) {
     style += ' border border-current'
