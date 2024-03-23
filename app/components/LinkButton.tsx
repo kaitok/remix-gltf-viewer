@@ -1,16 +1,16 @@
 const LinkButton = ({
-  size,
-  children,
-  bgColor,
-  textColor,
   href,
+  textColor,
+  children,
+  size,
+  bgColor,
   border,
 }: {
-  size?: string
-  children: string
-  bgColor: string
-  textColor: string
   href: string
+  textColor: string
+  children: string
+  size?: string
+  bgColor?: string
   border?: boolean
 }) => {
   let style = 'py-2.5 px-5 me-2 mb-2 text-sm font-medium'

@@ -1,15 +1,15 @@
 const Button = ({
-  size,
-  children,
-  bgColor,
   textColor,
+  children,
+  size,
+  bgColor,
   border,
   onClick,
 }: {
-  size?: string
-  children: string
-  bgColor: string
   textColor: string
+  children: string
+  size?: string
+  bgColor?: string
   border?: boolean
   onClick?: () => void
 }) => {
