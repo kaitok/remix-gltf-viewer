@@ -6,6 +6,7 @@ const Button = ({
   bgColor,
   border,
   onClick,
+  disabled,
 }: {
   textColor: string
   children: React.ReactNode
@@ -13,6 +14,7 @@ const Button = ({
   bgColor?: string
   border?: boolean
   onClick?: () => void
+  disabled?: boolean
 }) => {
   let style = 'py-2.5 px-5 text-sm font-medium'
   if (size == 'sm') {
@@ -28,8 +30,11 @@ const Button = ({
   return (
     <button
       type="button"
-      className={`text-center ${style} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 `}
+      className={`text-center ${style} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 ${
+        disabled ? 'opacity-50 hover:opacity-50' : ''
+      }`}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </button>
