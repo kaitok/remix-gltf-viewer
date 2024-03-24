@@ -1,15 +1,14 @@
-import type { MetaFunction } from '@remix-run/node'
 import { PrismaClient } from '@prisma/client'
 import { json } from '@remix-run/node'
+import type { MetaFunction, ActionFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
-import LinkButton from '~/components/LinkButton'
 import Back from '~/components/Back'
 import { useState } from 'react'
 import Button from '~/components/Button'
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Field' }]
+  return [{ title: 'Archives | Field' }]
 }
 
 export const loader = async () => {
@@ -17,6 +16,8 @@ export const loader = async () => {
   const projects = await prisma.project.findMany({ where: { deleted: true } })
   return json({ projects })
 }
+
+export const action = async ({ params, request }: ActionFunctionArgs) => {}
 
 export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
@@ -61,7 +62,7 @@ export default function Index() {
               textColor="white"
               disabled={checkedItems.length === 0}
             >
-              Restore Projects
+              Restore Project
             </Button>
           </div>
         </div>
