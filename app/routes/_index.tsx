@@ -19,26 +19,33 @@ export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
     <div className="mt-5">
-      <div className="flex gap-3 items-end">
-        <LinkButton
-          className="w-32"
-          href="projects/new"
-          bgColor="black"
-          textColor="white"
-        >
-          New Project
-        </LinkButton>
-        <LinkButton
-          className="w-20"
-          href="archive"
-          bgColor="white"
-          textColor="gray-800"
-          size="sm"
-        >
-          Archives
-        </LinkButton>
+      <div className="flex justify-between">
+        <h1 className="text-lg flex items-center">
+          <span className="text-xl">Projects</span>
+        </h1>
+
+        <div className="flex flex-row items-baseline gap-2">
+          <LinkButton
+            className="w-20"
+            href="archive"
+            bgColor="white"
+            textColor="gray-800"
+            size="sm"
+          >
+            Archives
+          </LinkButton>
+          <LinkButton
+            className="w-32"
+            href="projects/new"
+            bgColor="black"
+            textColor="white"
+          >
+            New Project
+          </LinkButton>
+        </div>
       </div>
-      <div className="grid grid-cols-3 gap-5 mt-2">
+      <div className="flex gap-3 items-end"></div>
+      <div className="grid grid-cols-3 gap-5 mt-5">
         {projects.map((v) => {
           return (
             <a

@@ -45,12 +45,10 @@ export default function Index() {
   return (
     <div className="mt-5">
       <div className="flex justify-between">
-        <div>
-          <h1 className="text-lg flex items-center">
-            <Back href="/" />
-            <span className="text-xl">Archives</span>
-          </h1>
-        </div>
+        <h1 className="text-lg flex items-center">
+          <Back href="/" />
+          <span className="text-xl">Archives</span>
+        </h1>
         <div>
           <Button bgColor="white" textColor="black" onClick={selectAll}>
             {isSelectedAll ? 'Cancel' : 'Select All'}
@@ -65,7 +63,7 @@ export default function Index() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-5 mt-2">
+      <div className="grid grid-cols-3 gap-5 mt-5">
         {projects.map((v) => {
           return (
             <div
