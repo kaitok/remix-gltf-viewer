@@ -19,7 +19,7 @@ export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
     <div className="mt-5">
-      <div className="flex">
+      <div className="flex gap-3 items-end">
         <LinkButton
           className="w-32"
           href="projects/new"
@@ -28,10 +28,16 @@ export default function Index() {
         >
           New Project
         </LinkButton>
+        <LinkButton
+          className="w-20"
+          href="archive"
+          bgColor="white"
+          textColor="gray-800"
+          size="sm"
+        >
+          Archives
+        </LinkButton>
       </div>
-
-      <a href="/archive">deleted projects</a>
-
       <div className="flex gap-5 mt-2">
         {projects.map((v) => {
           return (

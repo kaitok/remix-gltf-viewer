@@ -22,7 +22,7 @@ const LinkButton = ({
     style = 'h-8 min-w-12 py-[0.45rem] text-xs font-sm'
   }
   if (border) {
-    style += ' border'
+    style += ' border border-current'
   }
 
   // due to tailwind dosen't support dynamic class name like `bg-${bgColor}-600`

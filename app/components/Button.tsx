@@ -28,7 +28,7 @@ const Button = ({
   return (
     <button
       type="button"
-      className={`${style} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 `}
+      className={`text-center ${style} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 `}
       onClick={onClick}
     >
       {children}
