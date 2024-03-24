@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
 
 export const loader = async () => {
   const prisma = new PrismaClient()
-  const projects = await prisma.project.findMany({ where: { deleted: false } })
+  const projects = await prisma.project.findMany({ where: { deleted: true } })
   return json({ projects })
 }
 
@@ -19,18 +19,7 @@ export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
     <div className="mt-5">
-      <div className="flex">
-        <LinkButton
-          className="w-32"
-          href="projects/new"
-          bgColor="black"
-          textColor="white"
-        >
-          New Project
-        </LinkButton>
-      </div>
-
-      <a href="/archive">deleted projects</a>
+      <h1>Deleted Projects</h1>
 
       <div className="flex gap-5 mt-2">
         {projects.map((v) => {

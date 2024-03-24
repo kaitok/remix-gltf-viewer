@@ -1,7 +1,7 @@
 import { Dispatch, Fragment, SetStateAction, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { Description } from 'node_modules/@headlessui/react/dist/components/description/description'
+import { Form } from '@remix-run/react'
 
 export default function ConfirmModal({
   open,
@@ -9,20 +9,17 @@ export default function ConfirmModal({
   title,
   description,
   execButtonTitle,
-  handleExecButton,
 }: {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   title: string
   description: string
   execButtonTitle: string
-  handleExecButton: () => void
 }) {
   const cancelButtonRef = useRef(null)
 
   const execButton = () => {
     setOpen(false)
-    handleExecButton()
   }
 
   return (
@@ -79,13 +76,15 @@ export default function ConfirmModal({
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-sm bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={execButton}
-                  >
-                    {execButtonTitle}
-                  </button>
+                  <Form method="post">
+                    <button
+                      type="submit"
+                      className="inline-flex w-full justify-center rounded-sm bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                      onClick={execButton}
+                    >
+                      {execButtonTitle}
+                    </button>
+                  </Form>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-sm bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"

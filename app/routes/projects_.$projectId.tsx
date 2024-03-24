@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import Model from '~/components/model'
 import { dateFormat } from '~/utils/dateformat'
@@ -10,31 +11,59 @@ import ConfirmModal from '~/components/ConfirmModal'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const prisma = new PrismaClient()
+  const projectId = Number(params.projectId)
   const project = await prisma.project.findUnique({
     where: {
-      id: Number(params.projectId),
+      id: projectId,
     },
   })
   const notes = await prisma.note.findMany({
     where: {
-      projectId: Number(params.projectId),
+      projectId,
     },
   })
-  return json({ project, notes })
+  return json({ project, notes, projectId })
+}
+
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  const formData = await request.formData()
+  const projectId = Number(params.projectId)
+  await deleteNotes(projectId)
+  await deleteProject(projectId)
+  return redirect('/')
+}
+
+const deleteProject = async (projectId: number) => {
+  const prisma = new PrismaClient()
+  await prisma.project.updateMany({
+    where: {
+      id: projectId,
+    },
+    data: {
+      deleted: true,
+    },
+  })
+}
+
+const deleteNotes = async (projectId: number) => {
+  const prisma = new PrismaClient()
+  await prisma.note.updateMany({
+    where: {
+      projectId: projectId,
+    },
+    data: {
+      deleted: true,
+    },
+  })
 }
 
 export default function Project() {
-  const { project, notes } = useLoaderData<typeof loader>()
-  const navigate = useNavigate()
+  const { project, notes, projectId } = useLoaderData<typeof loader>()
+
   const [open, setOpen] = useState(false)
   const cancelButtonRef = useRef(null)
   const handleClickDelete = () => {
     setOpen(true)
-  }
-
-  const handleDelete = () => {
-    // TODO delete project by prisma
-    navigate('/')
   }
 
   return (
@@ -46,8 +75,8 @@ export default function Project() {
           title="Are you sure you want to delete this project?"
           description="This project will be deleted immediately, You can't undo this action."
           execButtonTitle="Delete"
-          handleExecButton={handleDelete}
         />
+
         <div className="flex flex-row gap-8">
           <div className="basis-1/3 flex flex-col gap-3 min-w-96">
             <div className="flex flex-col">
