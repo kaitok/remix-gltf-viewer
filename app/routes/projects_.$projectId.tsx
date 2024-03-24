@@ -78,6 +78,7 @@ export default function Project() {
           execButtonTitle="Delete"
         />
 
+        <Back href="/" label="projects" />
         <div className="flex flex-row gap-8">
           <div className="basis-1/3 flex flex-col gap-3 min-w-96">
             <div className="flex flex-col">
