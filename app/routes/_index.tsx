@@ -38,16 +38,14 @@ export default function Index() {
           Archives
         </LinkButton>
       </div>
-      <div className="flex gap-5 mt-2">
+      <div className="grid grid-cols-3 gap-5 mt-2">
         {projects.map((v) => {
           return (
             <a
               href={'projects/' + v.id}
-              className="block max-w-sm p-6 bg-white border border-gray-200 rounded-sm shadow hover:bg-gray-100 min-w-64"
+              className="block max-w-sm p-6 bg-white border border-gray-200 rounded-sm shadow hover:bg-gray-100 min-w-32"
             >
-              <h5 className="mb-2 text-xl tracking-tight text-gray-90">
-                {v.title}
-              </h5>
+              <h5 className="text-xl tracking-tight text-gray-90">{v.title}</h5>
               <p className="font-normal text-gray-700">{v.description}</p>
               <p> {dateFormat(v.createdAt)}</p>
             </a>

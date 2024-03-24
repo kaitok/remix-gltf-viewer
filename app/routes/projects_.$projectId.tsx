@@ -106,10 +106,7 @@ export default function Project() {
                 </div>
               </div>
               <div>
-                <p className="text-l pt-2">
-                  description asdfjwoein spodcpowenp npcwiepeinp npcwiencpiwe p
-                  inwpeincwpeinpweicnwpeinkcn wpenfpekcn asdfcwn pwneicnpwien.
-                </p>
+                <p className="text-l pt-2">{project?.description}</p>
               </div>
             </div>
             <div className="mt-10">
