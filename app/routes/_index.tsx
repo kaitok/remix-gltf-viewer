@@ -48,7 +48,7 @@ export default function Index() {
               <h5 className="mb-2 text-xl tracking-tight text-gray-90">
                 {v.title}
               </h5>
-              <p className="font-normal text-gray-700">description</p>
+              <p className="font-normal text-gray-700">{v.description}</p>
               <p> {dateFormat(v.createdAt)}</p>
             </a>
           )
