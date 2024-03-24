@@ -57,11 +57,11 @@ export default function Index() {
               {isSelectedAll ? 'Cancel' : 'Select All'}
             </Button>
             <Button
-              bgColor="red"
+              bgColor="black"
               textColor="white"
               disabled={checkedItems.length === 0}
             >
-              Delete Project
+              Restore Projects
             </Button>
           </div>
         </div>
