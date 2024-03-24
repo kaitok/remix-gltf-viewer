@@ -4,3 +4,10 @@ node_modules
 /build
 /public/build
 .env
+
+# postgres
+postgres-data
+
+
+# 3d models
+app/models
