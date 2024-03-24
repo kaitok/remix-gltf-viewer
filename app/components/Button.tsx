@@ -8,7 +8,7 @@ const Button = ({
   onClick,
 }: {
   textColor: string
-  children: string
+  children: React.ReactNode
   size?: string
   bgColor?: string
   border?: boolean

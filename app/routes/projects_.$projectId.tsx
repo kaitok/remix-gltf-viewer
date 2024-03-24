@@ -8,6 +8,7 @@ import Button from '~/components/Button'
 import LinkButton from '~/components/LinkButton'
 import { useState, useRef } from 'react'
 import ConfirmModal from '~/components/ConfirmModal'
+import Back from '~/components/Back'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const prisma = new PrismaClient()

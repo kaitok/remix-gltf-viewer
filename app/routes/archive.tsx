@@ -4,6 +4,7 @@ import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
 import LinkButton from '~/components/LinkButton'
+import Back from '~/components/Back'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Field' }]
@@ -19,7 +20,12 @@ export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
     <div className="mt-5">
-      <h1>Deleted Projects</h1>
+      <div className="flex gap-5 mt-5">
+        <h1 className="text-lg flex items-center">
+          <Back href="/" />
+          <span> Deleted Projects</span>
+        </h1>
+      </div>
 
       <div className="flex gap-5 mt-2">
         {projects.map((v) => {

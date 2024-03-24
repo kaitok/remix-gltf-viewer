@@ -11,7 +11,7 @@ const LinkButton = ({
 }: {
   href: string
   textColor: string
-  children: string
+  children: React.ReactNode
   size?: string
   bgColor?: string
   border?: boolean
