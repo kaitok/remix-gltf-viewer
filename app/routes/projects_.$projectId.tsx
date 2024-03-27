@@ -120,7 +120,7 @@ export default function Project() {
                     size="sm"
                     href={'/projects/' + project?.id + '/notes/new'}
                     textColor="white"
-                    bgColor="gray"
+                    bgColor="black"
                   >
                     New
                   </LinkButton>
