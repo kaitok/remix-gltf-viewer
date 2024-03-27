@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import { json } from '@remix-run/node'
 import type { MetaFunction, ActionFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useSubmit } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
 import Back from '~/components/Back'
 import { useState } from 'react'
 import Button from '~/components/Button'
+import { Form } from '@remix-run/react'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Archives | Field' }]
@@ -17,12 +18,42 @@ export const loader = async () => {
   return json({ projects })
 }
 
-export const action = async ({ params, request }: ActionFunctionArgs) => {}
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  const formData = await request.formData()
+  const checkedItems: string = String(formData.get('checkedItems'))
+  if (!checkedItems) return
 
-export default function Index() {
+  let projectIds: number[] = []
+  projectIds = checkedItems.split(',').map(Number)
+
+  projectIds.map(async (projectId) => {
+    const prisma = new PrismaClient()
+    await prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        deleted: false,
+      },
+    })
+    await prisma.note.updateMany({
+      where: {
+        projectId: projectId,
+      },
+      data: {
+        deleted: false,
+      },
+    })
+  })
+
+  return null
+}
+
+export default function Archives() {
   const { projects } = useLoaderData<typeof loader>()
   const [checkedItems, setCheckedItems] = useState<number[]>([])
   const [isSelectedAll, setIsSelectedAll] = useState<boolean>(false)
+  const submit = useSubmit()
 
   const handleCheckboxChange = (index: number) => {
     const newCheckedItems: number[] = [...checkedItems]
@@ -34,6 +65,10 @@ export default function Index() {
     setCheckedItems(newCheckedItems)
   }
 
+  const handleRestoreProject = () => {
+    submit({ checkedItems }, { method: 'post' })
+  }
+
   const selectAll = () => {
     if (isSelectedAll) {
       setCheckedItems([])
@@ -43,6 +78,7 @@ export default function Index() {
     }
     setIsSelectedAll(!isSelectedAll)
   }
+
   return (
     <>
       <div className="mt-5">
@@ -54,6 +90,7 @@ export default function Index() {
             <span className="text-xl">Archives</span>
           </h1>
           <div>
+            {/* <Form method="post"> */}
             <Button bgColor="white" textColor="black" onClick={selectAll}>
               {isSelectedAll ? 'Cancel' : 'Select All'}
             </Button>
@@ -61,9 +98,11 @@ export default function Index() {
               bgColor="black"
               textColor="white"
               disabled={checkedItems.length === 0}
+              onClick={handleRestoreProject}
             >
               Restore Project
             </Button>
+            {/* </Form> */}
           </div>
         </div>
 

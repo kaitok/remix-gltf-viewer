@@ -36,7 +36,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
 const deleteProject = async (projectId: number) => {
   const prisma = new PrismaClient()
-  await prisma.project.updateMany({
+  await prisma.project.update({
     where: {
       id: projectId,
     },
