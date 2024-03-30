@@ -2,22 +2,44 @@ import { PrismaClient } from '@prisma/client'
 import { ActionFunctionArgs } from '@remix-run/node'
 import { Form, redirect } from '@remix-run/react'
 import Button from '~/components/Button'
+import {
+  json,
+  unstable_parseMultipartFormData,
+  unstable_composeUploadHandlers,
+  unstable_createFileUploadHandler,
+  unstable_createMemoryUploadHandler,
+  NodeOnDiskFile,
+} from '@remix-run/node'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const prisma = new PrismaClient()
-  const formData = await request.formData()
+  const uploadHandler = unstable_composeUploadHandlers(
+    unstable_createFileUploadHandler({
+      maxPartSize: 1024 * 1024 * 1024,
+      directory: './public/models',
+      file: ({ filename }) => filename,
+    }),
+    // parse everything else into memory
+    unstable_createMemoryUploadHandler()
+  )
 
-  const title = String(formData.get('title')) || ''
-  const description = String(formData.get('description')) || ''
+  // get form data
+  const formData = await unstable_parseMultipartFormData(request, uploadHandler)
+  let file = formData.get('file') as NodeOnDiskFile
+  const title = formData.get('title') as string
+  const description = formData.get('description') as string
+
+  // Register to db
+  const prisma = new PrismaClient()
   const project = await prisma.project.create({
     data: {
       title: title,
       description: description,
-      objectURL: 'test url',
+      objectURL: file.name,
       userId: 1,
     },
   })
   return redirect('/projects/' + project.id)
+  return null
 }
 
 export default function New() {
@@ -27,7 +49,7 @@ export default function New() {
         <h1 className="text-2xl">New Project</h1>
       </div>
       <div className="max-w-xl mt-5">
-        <Form method="post">
+        <Form method="POST" encType="multipart/form-data">
           <div className="mb-5">
             <label
               htmlFor="title"
@@ -38,6 +60,7 @@ export default function New() {
             <input
               type="text"
               id="title"
+              name="title"
               className="rounded-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               required
             />
@@ -50,7 +73,8 @@ export default function New() {
               description
             </label>
             <textarea
-              id="message"
+              id="description"
+              name="description"
               rows={4}
               className="rounded-sm  p-2.5 w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
             ></textarea>
@@ -68,8 +92,9 @@ export default function New() {
               type="file"
               aria-describedby="file"
               id="file"
-              required
+              name="file"
               className="rounded-sm text-sm text-stone-500 w-full bg-gray-50 border cursor-pointer border-gray-300 file:mr-5 file:py-2 file:px-3 file:text-xs file:font-medium file:bg-black file:border-none file:text-white hover:file:cursor-pointer hover:file:bg-gray-800 hover:file:text-gray-200"
+              required
             />
             <div
               className="mt-1 text-sm text-gray-500 dark:text-gray-300"
