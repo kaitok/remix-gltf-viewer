@@ -69,7 +69,7 @@ export default function Project() {
 
   return (
     <>
-      <div className="mt-5">
+      <div className="mt-4">
         <ConfirmModal
           open={open}
           setOpen={setOpen}
@@ -79,10 +79,10 @@ export default function Project() {
         />
 
         <Back href="/" label="projects" />
-        <div className="flex flex-row gap-8">
+        <div className="flex flex-row gap-8 mt-2 ml-3">
           <div className="basis-1/3 flex flex-col gap-3 min-w-96">
             <div className="flex flex-col">
-              <div className="flex justify-between">
+              <div className="flex justify-between mt-2">
                 <div className="flex flex-col">
                   <h2 className="text-3xl">{project?.title}</h2>
                   <p className="text-l">{dateFormat(project?.updatedAt)}</p>
@@ -110,7 +110,7 @@ export default function Project() {
                 <p className="text-l pt-2">{project?.description}</p>
               </div>
             </div>
-            <div className="mt-10">
+            <div className="mt-5">
               <div className="flex justify-between">
                 <div>
                   <h2 className="text-2xl">Notes</h2>
