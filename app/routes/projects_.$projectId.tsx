@@ -27,7 +27,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 }
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
   const projectId = Number(params.projectId)
   await deleteNotes(projectId)
   await deleteProject(projectId)

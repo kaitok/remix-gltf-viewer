@@ -1,12 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 import { json } from '@remix-run/node'
 import type { MetaFunction, ActionFunctionArgs } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
 import Back from '~/components/Back'
 import { useState } from 'react'
 import Button from '~/components/Button'
-import { Form } from '@remix-run/react'
+import ConfirmModal from '~/components/ConfirmModal'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Archives | Field' }]
@@ -26,33 +27,50 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   let projectIds: number[] = []
   projectIds = checkedItems.split(',').map(Number)
 
-  projectIds.map(async (projectId) => {
-    const prisma = new PrismaClient()
-    await prisma.project.update({
-      where: {
-        id: projectId,
-      },
-      data: {
-        deleted: false,
-      },
+  if (formData.get('intent') === 'restore') {
+    projectIds.map(async (projectId) => {
+      const prisma = new PrismaClient()
+      await prisma.project.update({
+        where: {
+          id: projectId,
+        },
+        data: {
+          deleted: false,
+        },
+      })
+      await prisma.note.updateMany({
+        where: {
+          projectId: projectId,
+        },
+        data: {
+          deleted: false,
+        },
+      })
     })
-    await prisma.note.updateMany({
-      where: {
-        projectId: projectId,
-      },
-      data: {
-        deleted: false,
-      },
+  } else if (formData.get('intent') === 'delete') {
+    projectIds.map(async (projectId) => {
+      const prisma = new PrismaClient()
+      await prisma.note.deleteMany({
+        where: {
+          projectId: projectId,
+        },
+      })
+      await prisma.project.delete({
+        where: {
+          id: projectId,
+        },
+      })
     })
-  })
+  }
 
-  return null
+  return redirect('/archive')
 }
 
 export default function Archives() {
   const { projects } = useLoaderData<typeof loader>()
   const [checkedItems, setCheckedItems] = useState<number[]>([])
   const [isSelectedAll, setIsSelectedAll] = useState<boolean>(false)
+  const [open, setOpen] = useState(false)
   const submit = useSubmit()
 
   const handleCheckboxChange = (index: number) => {
@@ -66,7 +84,11 @@ export default function Archives() {
   }
 
   const handleRestoreProject = () => {
-    submit({ checkedItems }, { method: 'post' })
+    submit({ checkedItems, intent: 'restore' }, { method: 'post' })
+  }
+
+  const handleDeleteProject = () => {
+    submit({ checkedItems, intent: 'delete' }, { method: 'post' })
   }
 
   const selectAll = () => {
@@ -81,6 +103,13 @@ export default function Archives() {
 
   return (
     <>
+      <ConfirmModal
+        open={open}
+        setOpen={setOpen}
+        title="Are you sure you want to delete this projects?"
+        description="This project will be deleted immediately, You can't undo this action."
+        execButtonTitle="Delete"
+      />
       <div className="mt-5">
         <Back href="/" label="Projects" />
       </div>
@@ -89,8 +118,7 @@ export default function Archives() {
           <h1 className="text-lg flex items-center">
             <span className="text-xl">Archives</span>
           </h1>
-          <div>
-            {/* <Form method="post"> */}
+          <div className="flex gap-3">
             <Button bgColor="white" textColor="black" onClick={selectAll}>
               {isSelectedAll ? 'Cancel' : 'Select All'}
             </Button>
@@ -102,7 +130,14 @@ export default function Archives() {
             >
               Restore Project
             </Button>
-            {/* </Form> */}
+            <Button
+              bgColor="red"
+              textColor="white"
+              disabled={checkedItems.length === 0}
+              onClick={handleDeleteProject}
+            >
+              Delete
+            </Button>
           </div>
         </div>
 
