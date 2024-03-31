@@ -77,8 +77,6 @@ export default function Project() {
     setOpen(true)
   }
 
-  // const m = useGLTF(model)
-
   return (
     <>
       <div className="mt-4">

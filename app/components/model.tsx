@@ -8,14 +8,31 @@ import {
 } from '@react-three/drei'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three-stdlib'
-import { Suspense } from 'react'
-import model from '../models/scene2.glb'
+import { useRef, useState } from 'react'
 
 export default function Model() {
-  // const gltf = useLoader(GLTFLoader, model)
-  // const { scene } = useGLTF(model)
-  console.log(model)
+  const ref = useRef<HTMLElement>()
 
-  return <div>{/* <primitive object={scene} /> */}</div>
+  return (
+    <>
+      <Canvas
+        camera={{ fov: 75, position: [0, 0, 20] }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+        }}
+        eventSource={ref.current}
+        eventPrefix="client"
+      >
+        <Gltf
+          src="/models/scene-1711777033946.glb"
+          scale={0.1}
+          position={[0, -0.8, -4]}
+        />
+      </Canvas>
+    </>
+  )
 }
-useGLTF.preload(model)
