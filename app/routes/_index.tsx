@@ -4,13 +4,13 @@ import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
 import LinkButton from '~/components/LinkButton'
+import { prisma } from '~/db.server'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Field' }]
 }
 
 export const loader = async () => {
-  const prisma = new PrismaClient()
   const projects = await prisma.project.findMany({ where: { deleted: false } })
   return json({ projects })
 }
@@ -50,7 +50,7 @@ export default function Index() {
           return (
             <a
               href={'projects/' + v.id}
-              className="block max-w-sm p-6 bg-white border border-gray-200 rounded-sm shadow hover:bg-gray-100 min-w-32"
+              className="block truncate max-w-sm p-6 bg-white border border-gray-200 rounded-sm shadow hover:bg-gray-100 min-w-32"
             >
               <h5 className="text-xl tracking-tight text-gray-90">{v.title}</h5>
               <p className="font-normal text-gray-700">{v.description}</p>

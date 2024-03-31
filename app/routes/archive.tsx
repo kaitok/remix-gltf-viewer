@@ -1,28 +1,75 @@
 import { PrismaClient } from '@prisma/client'
 import { json } from '@remix-run/node'
 import type { MetaFunction, ActionFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { redirect } from '@remix-run/node'
+import { useLoaderData, useSubmit } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
 import Back from '~/components/Back'
 import { useState } from 'react'
 import Button from '~/components/Button'
+import ConfirmModal from '~/components/ConfirmModal'
+import { prisma } from '~/db.server'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Archives | Field' }]
 }
 
 export const loader = async () => {
-  const prisma = new PrismaClient()
   const projects = await prisma.project.findMany({ where: { deleted: true } })
   return json({ projects })
 }
 
-export const action = async ({ params, request }: ActionFunctionArgs) => {}
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  const formData = await request.formData()
+  const checkedItems: string = String(formData.get('checkedItems'))
+  if (!checkedItems) return
 
-export default function Index() {
+  let projectIds: number[] = []
+  projectIds = checkedItems.split(',').map(Number)
+
+  if (formData.get('intent') === 'restore') {
+    projectIds.map(async (projectId) => {
+      await prisma.project.update({
+        where: {
+          id: projectId,
+        },
+        data: {
+          deleted: false,
+        },
+      })
+      await prisma.note.updateMany({
+        where: {
+          projectId: projectId,
+        },
+        data: {
+          deleted: false,
+        },
+      })
+    })
+  } else if (formData.get('intent') === 'delete') {
+    projectIds.map(async (projectId) => {
+      await prisma.note.deleteMany({
+        where: {
+          projectId: projectId,
+        },
+      })
+      await prisma.project.delete({
+        where: {
+          id: projectId,
+        },
+      })
+    })
+  }
+
+  return redirect('/archive')
+}
+
+export default function Archives() {
   const { projects } = useLoaderData<typeof loader>()
   const [checkedItems, setCheckedItems] = useState<number[]>([])
   const [isSelectedAll, setIsSelectedAll] = useState<boolean>(false)
+  const [open, setOpen] = useState(false)
+  const submit = useSubmit()
 
   const handleCheckboxChange = (index: number) => {
     const newCheckedItems: number[] = [...checkedItems]
@@ -34,6 +81,14 @@ export default function Index() {
     setCheckedItems(newCheckedItems)
   }
 
+  const handleRestoreProject = () => {
+    submit({ checkedItems, intent: 'restore' }, { method: 'post' })
+  }
+
+  const handleDeleteProject = () => {
+    submit({ checkedItems, intent: 'delete' }, { method: 'post' })
+  }
+
   const selectAll = () => {
     if (isSelectedAll) {
       setCheckedItems([])
@@ -43,8 +98,16 @@ export default function Index() {
     }
     setIsSelectedAll(!isSelectedAll)
   }
+
   return (
     <>
+      <ConfirmModal
+        open={open}
+        setOpen={setOpen}
+        title="Are you sure you want to delete this projects?"
+        description="This project will be deleted immediately, You can't undo this action."
+        execButtonTitle="Delete"
+      />
       <div className="mt-5">
         <Back href="/" label="Projects" />
       </div>
@@ -53,7 +116,7 @@ export default function Index() {
           <h1 className="text-lg flex items-center">
             <span className="text-xl">Archives</span>
           </h1>
-          <div>
+          <div className="flex gap-3">
             <Button bgColor="white" textColor="black" onClick={selectAll}>
               {isSelectedAll ? 'Cancel' : 'Select All'}
             </Button>
@@ -61,8 +124,17 @@ export default function Index() {
               bgColor="black"
               textColor="white"
               disabled={checkedItems.length === 0}
+              onClick={handleRestoreProject}
             >
               Restore Project
+            </Button>
+            <Button
+              bgColor="red"
+              textColor="white"
+              disabled={checkedItems.length === 0}
+              onClick={handleDeleteProject}
+            >
+              Delete
             </Button>
           </div>
         </div>

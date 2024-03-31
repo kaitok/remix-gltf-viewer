@@ -35,7 +35,7 @@ export default function App() {
             </div>
           </nav>
         </header>
-        <div className=" max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8 p-5">
+        <div className="max-w-screen-xl mx-auto px-2 sm:px-5 md:px-8 p-5">
           <Outlet />
         </div>
 

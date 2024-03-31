@@ -9,9 +9,22 @@ import LinkButton from '~/components/LinkButton'
 import { useState, useRef } from 'react'
 import ConfirmModal from '~/components/ConfirmModal'
 import Back from '~/components/Back'
+import { prisma } from '~/db.server'
+
+import {
+  Environment,
+  Stats,
+  OrbitControls,
+  Circle,
+  Gltf,
+  useGLTF,
+} from '@react-three/drei'
+import { Canvas, useLoader } from '@react-three/fiber'
+import { GLTFLoader } from 'three-stdlib'
+import { Suspense } from 'react'
+import model from '../models/scene2.glb'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const prisma = new PrismaClient()
   const projectId = Number(params.projectId)
   const project = await prisma.project.findUnique({
     where: {
@@ -27,7 +40,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 }
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
   const projectId = Number(params.projectId)
   await deleteNotes(projectId)
   await deleteProject(projectId)
@@ -35,8 +47,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 }
 
 const deleteProject = async (projectId: number) => {
-  const prisma = new PrismaClient()
-  await prisma.project.updateMany({
+  await prisma.project.update({
     where: {
       id: projectId,
     },
@@ -47,7 +58,6 @@ const deleteProject = async (projectId: number) => {
 }
 
 const deleteNotes = async (projectId: number) => {
-  const prisma = new PrismaClient()
   await prisma.note.updateMany({
     where: {
       projectId: projectId,
@@ -69,7 +79,7 @@ export default function Project() {
 
   return (
     <>
-      <div className="mt-5">
+      <div className="mt-4">
         <ConfirmModal
           open={open}
           setOpen={setOpen}
@@ -79,12 +89,13 @@ export default function Project() {
         />
 
         <Back href="/" label="projects" />
-        <div className="flex flex-row gap-8">
-          <div className="basis-1/3 flex flex-col gap-3 min-w-96">
+        <div className="flex flex-row gap-8 mt-2 ml-3 mb-10 h-dvh">
+          <div className="basis-2/6 flex flex-col gap-3 truncate">
             <div className="flex flex-col">
-              <div className="flex justify-between">
+              <div className="flex justify-between mt-2">
                 <div className="flex flex-col">
                   <h2 className="text-3xl">{project?.title}</h2>
+                  <p className="text-3xl">{project?.description}</p>
                   <p className="text-l">{dateFormat(project?.updatedAt)}</p>
                 </div>
                 <div className="pt-1 flex gap-1">
@@ -110,7 +121,7 @@ export default function Project() {
                 <p className="text-l pt-2">{project?.description}</p>
               </div>
             </div>
-            <div className="mt-10">
+            <div className="mt-5">
               <div className="flex justify-between">
                 <div>
                   <h2 className="text-2xl">Notes</h2>
@@ -120,7 +131,7 @@ export default function Project() {
                     size="sm"
                     href={'/projects/' + project?.id + '/notes/new'}
                     textColor="white"
-                    bgColor="gray"
+                    bgColor="black"
                   >
                     New
                   </LinkButton>
@@ -142,8 +153,8 @@ export default function Project() {
               })}
             </div>
           </div>
-          <div className="basis-2/3 bg-gray-200">
-            <Model />
+          <div className="basis-4/6">
+            <Model filename={project?.objectURL || ''} />
           </div>
         </div>
       </div>

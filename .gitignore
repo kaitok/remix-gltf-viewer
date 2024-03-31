@@ -11,3 +11,4 @@ postgres-data
 
 # 3d models
 app/models
+public/models

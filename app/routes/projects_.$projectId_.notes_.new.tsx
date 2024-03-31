@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 import { ActionFunctionArgs } from '@remix-run/node'
 import { Form, redirect } from '@remix-run/react'
+import { prisma } from '~/db.server'
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  const prisma = new PrismaClient()
   const formData = await request.formData()
 
   if (params.projectId === undefined) {
