@@ -4,13 +4,13 @@ import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
 import LinkButton from '~/components/LinkButton'
+import { prisma } from '~/db.server'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Field' }]
 }
 
 export const loader = async () => {
-  const prisma = new PrismaClient()
   const projects = await prisma.project.findMany({ where: { deleted: false } })
   return json({ projects })
 }

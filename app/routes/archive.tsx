@@ -8,13 +8,13 @@ import Back from '~/components/Back'
 import { useState } from 'react'
 import Button from '~/components/Button'
 import ConfirmModal from '~/components/ConfirmModal'
+import { prisma } from '~/db.server'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Archives | Field' }]
 }
 
 export const loader = async () => {
-  const prisma = new PrismaClient()
   const projects = await prisma.project.findMany({ where: { deleted: true } })
   return json({ projects })
 }
@@ -29,7 +29,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   if (formData.get('intent') === 'restore') {
     projectIds.map(async (projectId) => {
-      const prisma = new PrismaClient()
       await prisma.project.update({
         where: {
           id: projectId,
@@ -49,7 +48,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     })
   } else if (formData.get('intent') === 'delete') {
     projectIds.map(async (projectId) => {
-      const prisma = new PrismaClient()
       await prisma.note.deleteMany({
         where: {
           projectId: projectId,

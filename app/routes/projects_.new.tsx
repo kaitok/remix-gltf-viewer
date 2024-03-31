@@ -10,6 +10,7 @@ import {
   unstable_createMemoryUploadHandler,
   NodeOnDiskFile,
 } from '@remix-run/node'
+import { prisma } from '~/db.server'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const uploadHandler = unstable_composeUploadHandlers(
@@ -29,7 +30,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const description = formData.get('description') as string
 
   // Register to db
-  const prisma = new PrismaClient()
   const project = await prisma.project.create({
     data: {
       title: title,

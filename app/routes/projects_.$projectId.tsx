@@ -9,6 +9,7 @@ import LinkButton from '~/components/LinkButton'
 import { useState, useRef } from 'react'
 import ConfirmModal from '~/components/ConfirmModal'
 import Back from '~/components/Back'
+import { prisma } from '~/db.server'
 
 import {
   Environment,
@@ -24,7 +25,6 @@ import { Suspense } from 'react'
 import model from '../models/scene2.glb'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const prisma = new PrismaClient()
   const projectId = Number(params.projectId)
   const project = await prisma.project.findUnique({
     where: {
@@ -47,7 +47,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 }
 
 const deleteProject = async (projectId: number) => {
-  const prisma = new PrismaClient()
   await prisma.project.update({
     where: {
       id: projectId,
@@ -59,7 +58,6 @@ const deleteProject = async (projectId: number) => {
 }
 
 const deleteNotes = async (projectId: number) => {
-  const prisma = new PrismaClient()
   await prisma.note.updateMany({
     where: {
       projectId: projectId,
