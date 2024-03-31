@@ -17,19 +17,13 @@ export default function Model() {
     <>
       <Canvas
         camera={{ fov: 75, position: [0, 0, 20] }}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-        }}
+        className="bg-gray-300"
         eventSource={ref.current}
         eventPrefix="client"
       >
         <Gltf
           src="/models/scene-1711777033946.glb"
-          scale={0.1}
+          scale={0.5}
           position={[0, -0.8, -4]}
         />
       </Canvas>
