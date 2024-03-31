@@ -90,7 +90,7 @@ export default function Project() {
 
         <Back href="/" label="projects" />
         <div className="flex flex-row gap-8 mt-2 ml-3 mb-10 h-dvh">
-          <div className="basis-1/3 flex flex-col gap-3 min-w-96">
+          <div className="basis-2/6 flex flex-col gap-3">
             <div className="flex flex-col">
               <div className="flex justify-between mt-2">
                 <div className="flex flex-col">
@@ -153,7 +153,7 @@ export default function Project() {
               })}
             </div>
           </div>
-          <div className="basis-2/3">
+          <div className="basis-4/6">
             <Model />
           </div>
         </div>
