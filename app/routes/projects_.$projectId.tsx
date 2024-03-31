@@ -10,6 +10,19 @@ import { useState, useRef } from 'react'
 import ConfirmModal from '~/components/ConfirmModal'
 import Back from '~/components/Back'
 
+import {
+  Environment,
+  Stats,
+  OrbitControls,
+  Circle,
+  Gltf,
+  useGLTF,
+} from '@react-three/drei'
+import { Canvas, useLoader } from '@react-three/fiber'
+import { GLTFLoader } from 'three-stdlib'
+import { Suspense } from 'react'
+import model from '../models/scene2.glb'
+
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const prisma = new PrismaClient()
   const projectId = Number(params.projectId)
@@ -66,6 +79,8 @@ export default function Project() {
     setOpen(true)
   }
 
+  // const m = useGLTF(model)
+
   return (
     <>
       <div className="mt-4">
@@ -84,6 +99,7 @@ export default function Project() {
               <div className="flex justify-between mt-2">
                 <div className="flex flex-col">
                   <h2 className="text-3xl">{project?.title}</h2>
+                  <p className="text-3xl">{project?.description}</p>
                   <p className="text-l">{dateFormat(project?.updatedAt)}</p>
                 </div>
                 <div className="pt-1 flex gap-1">
