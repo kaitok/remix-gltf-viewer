@@ -8,11 +8,13 @@ import {
 } from '@react-three/drei'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three-stdlib'
-import { useRef, useState } from 'react'
+import { useRef, useState, Suspense } from 'react'
+import { Html, useProgress } from '@react-three/drei'
+import Loader from './Loader'
 
 export default function Model({ filename }: { filename: string }) {
   const ref = useRef<HTMLElement>()
-
+  const { progress } = useProgress()
   return (
     <>
       <Canvas
@@ -21,8 +23,10 @@ export default function Model({ filename }: { filename: string }) {
         eventSource={ref.current}
         eventPrefix="client"
       >
-        <OrbitControls />
-        <Gltf src={'/models/' + filename} scale={1} position={[0, 0, 0]} />
+        <Suspense fallback={<Loader />}>
+          <OrbitControls />
+          <Gltf src={'/models/' + filename} scale={1} position={[0, 0, 0]} />
+        </Suspense>
       </Canvas>
     </>
   )
