@@ -90,7 +90,7 @@ export default function Project() {
 
         <Back href="/" label="projects" />
         <div className="flex flex-row gap-8 mt-2 ml-3 mb-10 h-dvh">
-          <div className="basis-2/6 flex flex-col gap-3">
+          <div className="basis-2/6 flex flex-col gap-3 truncate">
             <div className="flex flex-col">
               <div className="flex justify-between mt-2">
                 <div className="flex flex-col">
@@ -154,7 +154,7 @@ export default function Project() {
             </div>
           </div>
           <div className="basis-4/6">
-            <Model />
+            <Model filename={project?.objectURL || ''} />
           </div>
         </div>
       </div>

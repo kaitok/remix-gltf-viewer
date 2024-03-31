@@ -16,7 +16,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const uploadHandler = unstable_composeUploadHandlers(
     unstable_createFileUploadHandler({
       maxPartSize: 1024 * 1024 * 1024,
-      directory: './app/models',
+      directory: './public/models',
       file: ({ filename }) => filename,
     }),
     // parse everything else into memory
@@ -39,7 +39,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     },
   })
   return redirect('/projects/' + project.id)
-  return null
 }
 
 export default function New() {

@@ -10,7 +10,7 @@ import { Canvas, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three-stdlib'
 import { useRef, useState } from 'react'
 
-export default function Model() {
+export default function Model({ filename }: { filename: string }) {
   const ref = useRef<HTMLElement>()
 
   return (
@@ -21,11 +21,8 @@ export default function Model() {
         eventSource={ref.current}
         eventPrefix="client"
       >
-        <Gltf
-          src="/models/scene-1711777033946.glb"
-          scale={0.5}
-          position={[0, -0.8, -4]}
-        />
+        <OrbitControls />
+        <Gltf src={'/models/' + filename} scale={1} position={[0, 0, 0]} />
       </Canvas>
     </>
   )
