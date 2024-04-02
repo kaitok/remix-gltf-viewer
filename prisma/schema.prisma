@@ -14,21 +14,22 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  uuid      String
-  projects  Project[]
-  notes     Note[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
+  id           String    @id @default(uuid())
+  username     String    @unique
+  passwordHash String
+  uuid         String
+  projects     Project[]
+  notes        Note[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   title       String
   description String?
   objectURL   String?
-  userId      Int
+  userId      String
   user        User     @relation(fields: [userId], references: [id])
   notes       Note[]
   deleted     Boolean  @default(false)
@@ -37,14 +38,14 @@ model Project {
 }
 
 model Note {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   title     String
   content   String?
   x         Float?
   y         Float?
-  projectId Int
+  projectId String
   project   Project  @relation(fields: [projectId], references: [id])
-  authorId  Int
+  authorId  String
   author    User     @relation(fields: [authorId], references: [id])
   deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
