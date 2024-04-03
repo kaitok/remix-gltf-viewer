@@ -24,8 +24,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   const checkedItems: string = String(formData.get('checkedItems'))
   if (!checkedItems) return
 
-  let projectIds: number[] = []
-  projectIds = checkedItems.split(',').map(Number)
+  let projectIds: string[] = []
+  projectIds = checkedItems.split(',')
 
   if (formData.get('intent') === 'restore') {
     projectIds.map(async (projectId) => {
@@ -66,13 +66,13 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
 export default function Archives() {
   const { projects } = useLoaderData<typeof loader>()
-  const [checkedItems, setCheckedItems] = useState<number[]>([])
+  const [checkedItems, setCheckedItems] = useState<string[]>([])
   const [isSelectedAll, setIsSelectedAll] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const submit = useSubmit()
 
-  const handleCheckboxChange = (index: number) => {
-    const newCheckedItems: number[] = [...checkedItems]
+  const handleCheckboxChange = (index: string) => {
+    const newCheckedItems: string[] = [...checkedItems]
     if (newCheckedItems.includes(index)) {
       newCheckedItems.splice(newCheckedItems.indexOf(index), 1)
     } else {
@@ -93,7 +93,7 @@ export default function Archives() {
     if (isSelectedAll) {
       setCheckedItems([])
     } else {
-      const allProjectIds: number[] = projects.map((v) => v.id)
+      const allProjectIds: string[] = projects.map((v) => v.id)
       setCheckedItems(allProjectIds)
     }
     setIsSelectedAll(!isSelectedAll)

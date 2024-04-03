@@ -25,7 +25,7 @@ import { Suspense } from 'react'
 import model from '../models/scene2.glb'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const projectId = Number(params.projectId)
+  const projectId = params.projectId
   const project = await prisma.project.findUnique({
     where: {
       id: projectId,
@@ -40,13 +40,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 }
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  const projectId = Number(params.projectId)
+  const projectId = params.projectId
+  if (!projectId) return
   await deleteNotes(projectId)
   await deleteProject(projectId)
   return redirect('/')
 }
 
-const deleteProject = async (projectId: number) => {
+const deleteProject = async (projectId: string) => {
   await prisma.project.update({
     where: {
       id: projectId,
@@ -57,7 +58,7 @@ const deleteProject = async (projectId: number) => {
   })
 }
 
-const deleteNotes = async (projectId: number) => {
+const deleteNotes = async (projectId: string) => {
   await prisma.note.updateMany({
     where: {
       projectId: projectId,

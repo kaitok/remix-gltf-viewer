@@ -35,7 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       title: title,
       description: description,
       objectURL: file.name,
-      userId: 1,
+      userId: '1',
     },
   })
   return redirect('/projects/' + project.id)
