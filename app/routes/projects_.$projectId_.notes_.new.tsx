@@ -14,11 +14,11 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   const note = await prisma.note.create({
     data: {
       title: title,
-      projectId: Number(params.projectId),
-      authorId: 1,
+      projectId: params.projectId,
+      authorId: '1',
     },
   })
-  return redirect('/projects/' + Number(params.projectId))
+  return redirect('/projects/' + params.projectId)
 }
 
 export default function New() {
