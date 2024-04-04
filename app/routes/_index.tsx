@@ -18,7 +18,7 @@ export const loader = async () => {
 export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
-    <div className="mt-5">
+    <div className="p-8">
       <div className="flex justify-between">
         <h1 className="text-lg flex items-center">
           <span className="text-xl">Projects</span>

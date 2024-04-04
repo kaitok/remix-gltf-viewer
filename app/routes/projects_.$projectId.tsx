@@ -80,7 +80,7 @@ export default function Project() {
 
   return (
     <>
-      <div className="mt-2">
+      <div>
         <ConfirmModal
           open={open}
           setOpen={setOpen}
@@ -89,34 +89,27 @@ export default function Project() {
           execButtonTitle="Delete"
         />
 
-        <div className="flex flex-row gap-8 mt-1 ml-3 mb-1">
-          <div className="flex flex-row justify-between w-full">
-            <div className="flex flex-row gap-10">
-              <Back href="/" label="projects" />
-              <div className="flex flex-col">
-                <h2 className="text-lg">{project?.title}</h2>
-                <p className="text-sm">{project?.description}</p>
-              </div>
+        <div className="px-3 py-2 flex flex-row justify-between w-full items-center">
+          <div className="flex flex-row gap-10">
+            <Back href="/" label="projects" />
+            <div className="flex flex-col">
+              <h2 className="text-lg">{project?.title}</h2>
+              <p className="text-sm">{project?.description}</p>
             </div>
-            <div>
-              <p className="text-xs">
-                CreatedAt: {dateFormat(project?.updatedAt)}
-              </p>
-            </div>
+          </div>
 
-            <div className="pt-1 flex gap-1">
-              <Button size="sm" textColor="black" bgColor="white" border={true}>
-                Edit
-              </Button>
-              <Button
-                size="sm"
-                textColor="white"
-                bgColor="red"
-                onClick={handleClickDelete}
-              >
-                Delete
-              </Button>
-            </div>
+          <div className="pt-1 flex gap-1">
+            <Button size="sm" textColor="black" bgColor="white" border={true}>
+              Edit
+            </Button>
+            <Button
+              size="sm"
+              textColor="white"
+              bgColor="red"
+              onClick={handleClickDelete}
+            >
+              Delete
+            </Button>
           </div>
         </div>
 
