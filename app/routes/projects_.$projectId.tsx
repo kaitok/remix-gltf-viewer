@@ -80,7 +80,7 @@ export default function Project() {
 
   return (
     <>
-      <div className="mt-4">
+      <div className="mt-2">
         <ConfirmModal
           open={open}
           setOpen={setOpen}
@@ -89,74 +89,39 @@ export default function Project() {
           execButtonTitle="Delete"
         />
 
-        <Back href="/" label="projects" />
-        <div className="flex flex-row gap-8 mt-2 ml-3 mb-10 h-dvh">
-          <div className="basis-2/6 flex flex-col gap-3 truncate">
-            <div className="flex flex-col">
-              <div className="flex justify-between mt-2">
-                <div className="flex flex-col">
-                  <h2 className="text-3xl">{project?.title}</h2>
-                  <p className="text-3xl">{project?.description}</p>
-                  <p className="text-l">{dateFormat(project?.updatedAt)}</p>
-                </div>
-                <div className="pt-1 flex gap-1">
-                  <Button
-                    size="sm"
-                    textColor="black"
-                    bgColor="white"
-                    border={true}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    textColor="white"
-                    bgColor="red"
-                    onClick={handleClickDelete}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-              <div>
-                <p className="text-l pt-2">{project?.description}</p>
+        <div className="flex flex-row gap-8 mt-1 ml-3 mb-1">
+          <div className="flex flex-row justify-between w-full">
+            <div className="flex flex-row gap-10">
+              <Back href="/" label="projects" />
+              <div className="flex flex-col">
+                <h2 className="text-lg">{project?.title}</h2>
+                <p className="text-sm">{project?.description}</p>
               </div>
             </div>
-            <div className="mt-5">
-              <div className="flex justify-between">
-                <div>
-                  <h2 className="text-2xl">Notes</h2>
-                </div>
-                <div>
-                  <LinkButton
-                    size="sm"
-                    href={'/projects/' + project?.id + '/notes/new'}
-                    textColor="white"
-                    bgColor="black"
-                  >
-                    New
-                  </LinkButton>
-                </div>
-              </div>
+            <div>
+              <p className="text-xs">
+                CreatedAt: {dateFormat(project?.updatedAt)}
+              </p>
             </div>
 
-            <div className="flex flex-col gap-4">
-              {notes.map((v) => {
-                return (
-                  <a
-                    href={`/projects/${project?.id}/notes/1`}
-                    className="block max-w-sm p-6 bg-white border border-gray-200 rounded-sm shadow hover:bg-gray-100 min-w-64"
-                  >
-                    <p className="text-lg">{v.title}</p>
-                    {dateFormat(v.createdAt)}
-                  </a>
-                )
-              })}
+            <div className="pt-1 flex gap-1">
+              <Button size="sm" textColor="black" bgColor="white" border={true}>
+                Edit
+              </Button>
+              <Button
+                size="sm"
+                textColor="white"
+                bgColor="red"
+                onClick={handleClickDelete}
+              >
+                Delete
+              </Button>
             </div>
           </div>
-          <div className="basis-4/6">
-            <Model filename={project?.objectURL || ''} />
-          </div>
+        </div>
+
+        <div style={{ height: '83vh' }}>
+          <Model filename={project?.objectURL || ''} />
         </div>
       </div>
     </>
