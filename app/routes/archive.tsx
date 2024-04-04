@@ -108,7 +108,7 @@ export default function Archives() {
         description="This project will be deleted immediately, You can't undo this action."
         execButtonTitle="Delete"
       />
-      <div className="p-8">
+      <div className="py-5 px-8">
         <Back href="/" label="Projects" />
 
         <div className="mt-3">

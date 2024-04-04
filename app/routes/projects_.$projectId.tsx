@@ -113,7 +113,7 @@ export default function Project() {
           </div>
         </div>
 
-        <div style={{ height: '83vh' }}>
+        <div style={{ height: '84vh' }}>
           <Model filename={project?.objectURL || ''} />
         </div>
       </div>

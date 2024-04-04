@@ -25,11 +25,11 @@ export default function App() {
       </head>
       <body style={{ fontFamily: 'system-ui, sans-serif' }}>
         <header>
-          <nav className="bg-white border-gray-200 px-5 lg:px-6 py-5 border-b-black border-b-[.5px]">
+          <nav className="bg-white border-gray-200 px-5 lg:px-6 py-4 border-b-black border-b-[.5px]">
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
               <a href="/" className="flex items-center">
-                <span className="self-center text-2xl font-semibold whitespace-nowrap">
-                  Field
+                <span className="self-center text-lg font-medium whitespace-nowrap">
+                  glTF Viewer
                 </span>
               </a>
             </div>

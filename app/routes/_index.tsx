@@ -7,7 +7,7 @@ import LinkButton from '~/components/LinkButton'
 import { prisma } from '~/db.server'
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Field' }]
+  return [{ title: 'glTF viewer' }]
 }
 
 export const loader = async () => {
@@ -18,7 +18,7 @@ export const loader = async () => {
 export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
-    <div className="p-8">
+    <div className="py-5 px-8">
       <div className="flex justify-between">
         <h1 className="text-lg flex items-center">
           <span className="text-xl">Projects</span>
