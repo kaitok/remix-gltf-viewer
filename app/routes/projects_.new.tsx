@@ -52,7 +52,7 @@ export default function New() {
             <div className="mb-5">
               <label
                 htmlFor="title"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-gray-900"
               >
                 Title
               </label>
@@ -67,7 +67,7 @@ export default function New() {
             <div className="mb-5">
               <label
                 htmlFor="description"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-gray-900"
               >
                 description
               </label>
@@ -81,7 +81,7 @@ export default function New() {
 
             <div className="mb-5">
               <label
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-gray-900"
                 htmlFor="file"
               >
                 Upload file
@@ -95,10 +95,7 @@ export default function New() {
                 className="rounded-sm text-sm text-stone-500 w-full bg-gray-50 border cursor-pointer border-gray-300 file:mr-5 file:py-2 file:px-3 file:text-xs file:font-medium file:bg-black file:border-none file:text-white hover:file:cursor-pointer hover:file:bg-gray-800 hover:file:text-gray-200"
                 required
               />
-              <div
-                className="mt-1 text-sm text-gray-500 dark:text-gray-300"
-                id="file"
-              >
+              <div className="mt-1 text-sm text-gray-500" id="file">
                 only support glTF format
               </div>
             </div>
