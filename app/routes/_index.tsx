@@ -1,16 +1,20 @@
-import type { MetaFunction } from '@remix-run/node'
+import type { MetaFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { PrismaClient } from '@prisma/client'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
 import LinkButton from '~/components/LinkButton'
 import { prisma } from '~/db.server'
+import { authenticator } from '~/services/auth.server'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'glTF viewer' }]
 }
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  })
   const projects = await prisma.project.findMany({ where: { deleted: false } })
   return json({ projects })
 }
