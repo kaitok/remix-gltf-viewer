@@ -27,6 +27,8 @@
     "orbit-controls": "^1.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "remix-auth": "^3.6.0",
+    "remix-auth-form": "^1.4.0",
     "three": "^0.161.0"
   },
   "devDependencies": {
