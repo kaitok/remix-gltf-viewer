@@ -10,13 +10,26 @@ import {
 } from '@remix-run/react'
 import stylesheet from '~/tailwind.css'
 import Button from './components/Button'
+import { useLoaderData } from '@remix-run/react'
 import { authenticator } from './services/auth.server'
+import { useRouteLoaderData } from '@remix-run/react'
+import { LoaderFunctionArgs } from '@remix-run/node'
+import { json } from '@remix-run/node'
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
 ]
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  const isLogin: boolean = (await authenticator.isAuthenticated(request))
+    ? true
+    : false
+  return json({ isLogin })
+}
+
 export default function App() {
+  const { isLogin } = useLoaderData<typeof loader>()
+
   return (
     <html lang="en">
       <head>
@@ -37,16 +50,18 @@ export default function App() {
                 </a>
               </div>
               <div>
-                <form action="/logout" method="post">
-                  <Button
-                    type="submit"
-                    bgColor="white"
-                    textColor="black"
-                    border={true}
-                  >
-                    Log out
-                  </Button>
-                </form>
+                {isLogin && (
+                  <form action="/logout" method="post">
+                    <Button
+                      type="submit"
+                      bgColor="white"
+                      textColor="black"
+                      border={true}
+                    >
+                      Log out
+                    </Button>
+                  </form>
+                )}
               </div>
             </div>
           </nav>
