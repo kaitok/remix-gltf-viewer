@@ -17,15 +17,15 @@ export default function SignUp() {
         <Form method="post">
           <div className="mb-5">
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block mb-2 text-sm font-medium text-gray-900"
             >
-              Email
+              Username
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
+              type="text"
+              id="username"
+              name="username"
               className="rounded-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               required
             />
