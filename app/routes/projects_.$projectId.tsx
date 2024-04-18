@@ -99,9 +99,6 @@ export default function Project() {
           </div>
 
           <div className="pt-1 flex gap-1">
-            <Button size="sm" textColor="black" bgColor="white" border={true}>
-              Edit
-            </Button>
             <Button
               size="sm"
               textColor="white"
