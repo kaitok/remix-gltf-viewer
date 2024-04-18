@@ -6,6 +6,7 @@ import Button from '~/components/Button'
 import { register } from '~/services/register.server'
 import { login } from '~/services/login.server'
 import { prisma } from '~/db.server'
+import { getSession, commitSession } from '~/services/session.server'
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData()
@@ -26,9 +27,12 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   }
 
-  await register(username, password)
-  const user: any = await login(username, password)
-  return redirect('/')
+  const user = await register(username, password)
+  let session = await getSession(request.headers.get('_session'))
+  session.set(authenticator.sessionKey, user)
+  return redirect('/', {
+    headers: { 'Set-Cookie': await commitSession(session) },
+  })
 }
 
 export default function SignUp() {
