@@ -1,24 +1,33 @@
-import type { MetaFunction } from '@remix-run/node'
+import type { MetaFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { PrismaClient } from '@prisma/client'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { dateFormat } from '~/utils/dateformat'
 import LinkButton from '~/components/LinkButton'
 import { prisma } from '~/db.server'
+import { authenticator } from '~/services/auth.server'
+import { getSession } from '~/services/session.server'
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Field' }]
+  return [{ title: 'glTF viewer' }]
 }
 
-export const loader = async () => {
-  const projects = await prisma.project.findMany({ where: { deleted: false } })
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  })
+
+  let session = await getSession(request.headers.get('Cookie'))
+  const projects = await prisma.project.findMany({
+    where: { userId: session.data.user.id, deleted: false },
+  })
   return json({ projects })
 }
 
 export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
   return (
-    <div className="mt-5">
+    <div className="py-5 px-8">
       <div className="flex justify-between">
         <h1 className="text-lg flex items-center">
           <span className="text-xl">Projects</span>

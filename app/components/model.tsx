@@ -19,7 +19,7 @@ export default function Model({ filename }: { filename: string }) {
     <>
       <Canvas
         camera={{ fov: 75, position: [0, 0, 20] }}
-        className="bg-gray-300"
+        className="bg-gray-300 w-full h-full"
         eventSource={ref.current}
         eventPrefix="client"
       >
