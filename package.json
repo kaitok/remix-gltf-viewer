@@ -1,5 +1,5 @@
 {
-  "name": "field",
+  "name": "gltf-viewer",
   "private": true,
   "sideEffects": false,
   "type": "module",
