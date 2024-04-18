@@ -12,9 +12,9 @@ export let authenticator = new Authenticator<User>(sessionStorage)
 // Tell the Authenticator to use the form strategy
 authenticator.use(
   new FormStrategy(async ({ form }: { form: any }) => {
-    let email = form.get('email')
+    let username = form.get('username')
     let password = form.get('password')
-    let user = await login(String(email), String(password))
+    let user = await login(String(username), String(password))
     // the type of this user must match the type you pass to the Authenticator
     // the strategy will automatically inherit the type if you instantiate
     // directly inside the `use` method

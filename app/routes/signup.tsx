@@ -1,18 +1,43 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Form } from '@remix-run/react'
+import { Form, useActionData, redirect } from '@remix-run/react'
+import { json } from '@remix-run/node'
 import { authenticator } from '~/services/auth.server'
 import Button from '~/components/Button'
+import { register } from '~/services/register.server'
+import { login } from '~/services/login.server'
+import { prisma } from '~/db.server'
 
 export async function action({ request }: ActionFunctionArgs) {
-  return null
+  const formData = await request.formData()
+  const username = String(formData.get('username'))
+  const password = String(formData.get('password'))
+  const errors: any = {}
+
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      username,
+    },
+  })
+
+  if (existingUser) {
+    errors.username = 'username already exist'
+    if (Object.keys(errors).length > 0) {
+      return json({ errors })
+    }
+  }
+
+  await register(username, password)
+  const user: any = await login(username, password)
+  return redirect('/')
 }
 
 export default function SignUp() {
+  const actionData = useActionData<typeof action>()
   return (
     <div className="py-5 px-8">
       <div className="max-w-xl mt-5">
         <div className="my-3">
-          <h1 className="text-xl">Sign Up</h1>
+          <h1 className="text-xl">Create Account</h1>
         </div>
         <Form method="post">
           <div className="mb-5">
@@ -29,6 +54,9 @@ export default function SignUp() {
               className="rounded-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               required
             />
+            {actionData?.errors?.username ? (
+              <em>{actionData?.errors.username}</em>
+            ) : null}
           </div>
           <div className="mb-5">
             <label
@@ -50,7 +78,7 @@ export default function SignUp() {
 
           <div className="flex justify-end">
             <Button type="submit" bgColor="black" textColor="white">
-              Sign In
+              Create
             </Button>
           </div>
         </Form>

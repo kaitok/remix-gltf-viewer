@@ -13,6 +13,9 @@ export default function Screen() {
           <h1 className="text-xl">Login</h1>
         </div>
         <Form method="post">
+          <div className="flex justify-end">
+            <a href="signup">Create account</a>
+          </div>
           <div className="mb-5">
             <label
               htmlFor="username"
