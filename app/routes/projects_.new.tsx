@@ -11,6 +11,7 @@ import {
   NodeOnDiskFile,
 } from '@remix-run/node'
 import { prisma } from '~/db.server'
+import { getSession } from '~/services/session.server'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const uploadHandler = unstable_composeUploadHandlers(
@@ -29,13 +30,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const title = formData.get('title') as string
   const description = formData.get('description') as string
 
+  let session = await getSession(request.headers.get('Cookie'))
+
   // Register to db
   const project = await prisma.project.create({
     data: {
       title: title,
       description: description,
       objectURL: file.name,
-      userId: '1',
+      userId: session.data.user.id,
     },
   })
   return redirect('/projects/' + project.id)

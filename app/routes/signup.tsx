@@ -28,7 +28,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const user = await register(username, password)
-  let session = await getSession(request.headers.get('_session'))
+  let session = await getSession(request.headers.get('Cookie'))
   session.set(authenticator.sessionKey, user)
   return redirect('/', {
     headers: { 'Set-Cookie': await commitSession(session) },

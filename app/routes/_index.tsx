@@ -6,6 +6,7 @@ import { dateFormat } from '~/utils/dateformat'
 import LinkButton from '~/components/LinkButton'
 import { prisma } from '~/db.server'
 import { authenticator } from '~/services/auth.server'
+import { getSession } from '~/services/session.server'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'glTF viewer' }]
@@ -15,7 +16,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   })
-  const projects = await prisma.project.findMany({ where: { deleted: false } })
+
+  let session = await getSession(request.headers.get('Cookie'))
+  const projects = await prisma.project.findMany({
+    where: { userId: session.data.user.id, deleted: false },
+  })
   return json({ projects })
 }
 
