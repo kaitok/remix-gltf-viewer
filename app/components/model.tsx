@@ -37,6 +37,10 @@ export default function Model({ filename }: { filename: string }) {
       </mesh>
     )
   }
+
+  const handleClick = (props: any) => {
+    console.log(props.point)
+  }
   return (
     <>
       <Canvas
@@ -71,6 +75,7 @@ export default function Model({ filename }: { filename: string }) {
             scale={1}
             position={[0, 0, 0]}
             rotation={[0, Math.PI, 0]}
+            onClick={handleClick}
           />
         </Suspense>
       </Canvas>
