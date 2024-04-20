@@ -34,6 +34,25 @@ The idea was created to see if viewing and making notes on 3D models of the surv
 docker copose up -d 
 ```
 
+### Database setup
+create database in local postgresql 
+database name: gltf-viewer
+
+Crete env file and setup DATABASE_URL to connect postgresql
+```
+cp .env.sample .env
+```
+
+### Run migration
+
+
+
+
+```
+npx prisma migrate dev
+```
+
+
 ### Run server
 
 ```sh
