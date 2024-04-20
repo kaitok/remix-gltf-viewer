@@ -34,13 +34,6 @@ The idea was created to see if viewing and making notes on 3D models of the surv
 docker copose up -d 
 ```
 
-### Connect to local database
-
-user: postgres
-password: postgres
-database: field
-
-
 ### Run server
 
 ```sh
