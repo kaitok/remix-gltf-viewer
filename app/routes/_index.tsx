@@ -30,7 +30,7 @@ export default function Index() {
     <div className="py-5 px-8">
       <div className="flex justify-between">
         <h1 className="text-lg flex items-center">
-          <span className="text-xl">Projects</span>
+          <span className="text-md">Projects</span>
         </h1>
 
         <div className="flex flex-row items-baseline gap-2">

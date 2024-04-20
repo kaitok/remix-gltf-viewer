@@ -48,7 +48,7 @@ export default function New() {
   return (
     <>
       <div className="py-5 px-8">
-        <h1 className="text-2xl">New Project</h1>
+        <h1 className="text-md">New Project</h1>
 
         <div className="max-w-xl mt-5">
           <Form method="POST" encType="multipart/form-data">
