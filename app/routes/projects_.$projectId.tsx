@@ -89,11 +89,11 @@ export default function Project() {
           execButtonTitle="Delete"
         />
 
-        <div className="px-3 py-2 flex flex-row justify-between w-full items-center">
+        <div className="px-6 pt-5 flex flex-row justify-between w-full items-center">
           <div className="flex flex-row gap-10">
             <Back href="/" label="projects" />
             <div className="flex flex-col">
-              <h2 className="text-lg">{project?.title}</h2>
+              <h2 className="text-md">{project?.title}</h2>
               <p className="text-sm">{project?.description}</p>
             </div>
           </div>

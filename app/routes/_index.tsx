@@ -30,9 +30,7 @@ export default function Index() {
   return (
     <div className="py-5 px-8">
       <div className="flex justify-between">
-        <h1 className="text-lg flex items-center">
-          <span className="text-xl">Projects</span>
-        </h1>
+        <h1 className="text-md flex items-center">Projects</h1>
 
         <div className="flex flex-row items-baseline gap-2">
           <LinkButton
@@ -60,7 +58,7 @@ export default function Index() {
           return (
             <Link
               to={'projects/' + v.id}
-              className="block truncate max-w-sm p-6 border bg-white border-gray-200 rounded-sm min-w-32"
+              className="block truncate max-w-sm p-6 border bg-white border-gray-300 rounded-sm min-w-32"
             >
               <h5 className="text-xl tracking-tight text-gray-90">{v.title}</h5>
               <p className="font-normal text-gray-700">{v.description}</p>
