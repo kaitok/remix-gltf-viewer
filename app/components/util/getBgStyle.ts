@@ -4,10 +4,12 @@ const getBgStyle = (bgColor: string | undefined) => {
   if (bgColor === 'black') {
     bgStyle = `bg-black`
   } else if (bgColor === 'white') {
-    bgStyle = `bg-white`
+    bgStyle = `bg-fafafa`
   } else if (bgColor === 'red') {
     bgStyle = `bg-red-600`
   } else if (bgColor === 'blue') {
+    bgStyle = `bg-blue-600`
+  } else {
     bgStyle = `bg-blue-600`
   }
   return bgStyle

@@ -38,13 +38,18 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body style={{ fontFamily: 'system-ui, sans-serif' }}>
+      <body
+        style={{
+          fontFamily: 'system-ui, sans-serif',
+          backgroundColor: '#fafafa',
+        }}
+      >
         <header>
-          <nav className="bg-white border-gray-200 px-5 lg:px-6 py-4 border-b-black border-b-[.5px]">
+          <nav className="border-gray-200 px-5 lg:px-6 py-4 border-b-black border-b-[.5px]">
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
               <div>
                 <a href="/" className="flex items-center">
-                  <span className="self-center text-lg font-medium whitespace-nowrap">
+                  <span className="self-center text-md font-medium whitespace-nowrap">
                     glTF Viewer
                   </span>
                 </a>
@@ -56,9 +61,10 @@ export default function App() {
                       type="submit"
                       bgColor="white"
                       textColor="black"
+                      size="sm"
                       border={true}
                     >
-                      Log out
+                      Logout
                     </Button>
                   </form>
                 )}

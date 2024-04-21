@@ -113,9 +113,7 @@ export default function Archives() {
 
         <div className="mt-3">
           <div className="flex justify-between">
-            <h1 className="text-lg flex items-center">
-              <span className="text-xl">Archives</span>
-            </h1>
+            <h1 className="text-md flex items-center">Archives</h1>
             <div className="flex gap-3">
               <Button bgColor="white" textColor="black" onClick={selectAll}>
                 {isSelectedAll ? 'Cancel' : 'Select All'}

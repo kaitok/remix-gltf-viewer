@@ -45,13 +45,9 @@ cp .env.sample .env
 
 ### Run migration
 
-
-
-
 ```
 npx prisma migrate dev
 ```
-
 
 ### Run server
 

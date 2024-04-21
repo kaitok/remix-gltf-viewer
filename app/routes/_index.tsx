@@ -7,6 +7,7 @@ import LinkButton from '~/components/LinkButton'
 import { prisma } from '~/db.server'
 import { authenticator } from '~/services/auth.server'
 import { getSession } from '~/services/session.server'
+import { Link } from '@remix-run/react'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'glTF viewer' }]
@@ -29,9 +30,7 @@ export default function Index() {
   return (
     <div className="py-5 px-8">
       <div className="flex justify-between">
-        <h1 className="text-lg flex items-center">
-          <span className="text-md">Projects</span>
-        </h1>
+        <h1 className="text-md flex items-center">Projects</h1>
 
         <div className="flex flex-row items-baseline gap-2">
           <LinkButton
@@ -57,14 +56,14 @@ export default function Index() {
       <div className="grid grid-cols-3 gap-5 mt-5">
         {projects.map((v) => {
           return (
-            <a
-              href={'projects/' + v.id}
-              className="block truncate max-w-sm p-6 bg-white border border-gray-200 rounded-sm shadow hover:bg-gray-100 min-w-32"
+            <Link
+              to={'projects/' + v.id}
+              className="block truncate max-w-sm p-6 border bg-white border-gray-300 rounded-sm min-w-32"
             >
               <h5 className="text-xl tracking-tight text-gray-90">{v.title}</h5>
               <p className="font-normal text-gray-700">{v.description}</p>
               <p> {dateFormat(v.createdAt)}</p>
-            </a>
+            </Link>
           )
         })}
       </div>
