@@ -15,21 +15,14 @@ export default function Model({ filename }) {
     if (cameraControlRef.current) {
       const cameraControls = cameraControlRef.current
 
-      // カメラのターゲットをSphereの位置に設定
-      cameraControls.setTarget(position.x, position.y, position.z, true) // アニメーションを使用する
-
       // カメラの位置をターゲットからのオフセットで設定
       const offset = new Vector3(5, 0, 0).applyEuler(rotation)
       const cameraPosition = position.clone().add(offset)
 
-      // カメラの位置を設定
-      cameraControls.setLookAt(
+      cameraControls.setPosition(
         cameraPosition.x,
         cameraPosition.y,
         cameraPosition.z,
-        position.x,
-        position.y,
-        position.z,
         true // アニメーションで設定
       )
     } else {
@@ -115,7 +108,7 @@ export default function Model({ filename }) {
               onClick={() => handleSphereClick(pos, sphereRotations[idx])}
             >
               <sphereGeometry args={[0.5, 16, 16]} />
-              <meshStandardMaterial color="red" />
+              <meshBasicMaterial color="red" />
             </mesh>
           ))}
         </Suspense>
