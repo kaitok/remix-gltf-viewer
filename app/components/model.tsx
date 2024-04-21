@@ -11,7 +11,8 @@ export default function Model({ filename }: { filename: string }) {
   const [sphereRotations, setSphereRotations] = useState([]) // Sphereの回転を管理
 
   // SphereをクリックするとOrbitControlsのカメラ位置とターゲットを変更
-  const handleSphereClick = (position, rotation) => {
+  const handleSphereClick = (position, rotation, idx) => {
+    console.log('idx', idx)
     if (orbitControlsRef.current) {
       const orbitControls = orbitControlsRef.current
 
@@ -25,8 +26,8 @@ export default function Model({ filename }: { filename: string }) {
 
       // カメラの回転を設定
       // orbitControls.object.rotation.copy(rotation) // Sphereの回転をカメラに適用
-      const cameraQuaternion = new Quaternion().setFromEuler(rotation)
-      orbitControls.object.quaternion.copy(cameraQuaternion) // カメラの回転を設定
+      // const cameraQuaternion = new Quaternion().setFromEuler(rotation)
+      // orbitControls.object.quaternion.copy(cameraQuaternion) // カメラの回転を設定
 
       console.log('rotation', rotation)
 
@@ -90,7 +91,7 @@ export default function Model({ filename }: { filename: string }) {
 
       <Canvas
         camera={{ fov: 75, position: [0, 0, 20] }}
-        style={{ backgroundColor: '#f3f3f3' }}
+        style={{ backgroundColor: '#f3f3f3', borderTop: '1px solid #e5e7eb' }}
       >
         <ambientLight intensity={Math.PI / 2} />
         <spotLight
@@ -118,7 +119,7 @@ export default function Model({ filename }: { filename: string }) {
             <mesh
               key={idx}
               position={pos}
-              onClick={() => handleSphereClick(pos, sphereRotations[idx])} // クリック時の処理
+              onClick={() => handleSphereClick(pos, sphereRotations[idx], idx)} // クリック時の処理
             >
               <sphereGeometry args={[0.5, 16, 16]} />
               <meshStandardMaterial color="red" />

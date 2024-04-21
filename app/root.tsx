@@ -49,7 +49,7 @@ export default function App() {
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
               <div>
                 <a href="/" className="flex items-center">
-                  <span className="self-center text-lg font-medium whitespace-nowrap">
+                  <span className="self-center text-md font-medium whitespace-nowrap">
                     glTF Viewer
                   </span>
                 </a>
@@ -61,9 +61,10 @@ export default function App() {
                       type="submit"
                       bgColor="white"
                       textColor="black"
+                      size="sm"
                       border={true}
                     >
-                      Log out
+                      Logout
                     </Button>
                   </form>
                 )}
