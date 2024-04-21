@@ -113,7 +113,7 @@ export default function Model({ filename }) {
               onClick={() => handleSphereClick(pos, sphereRotations[idx])}
             >
               <sphereGeometry args={[0.5, 16, 16]} />
-              <meshBasicMaterial color="red" />
+              <meshStandardMaterial color="red" />
             </mesh>
           ))}
         </Suspense>
