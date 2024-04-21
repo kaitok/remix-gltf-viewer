@@ -34,6 +34,7 @@ function Loader() {
         <div
           style={{
             marginTop: '17px',
+            marginRight: '5px',
             fontSize: '15px',
             color: '#848484',
           }}
