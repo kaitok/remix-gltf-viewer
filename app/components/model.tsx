@@ -16,7 +16,7 @@ export default function Model({ filename }) {
       const cameraControls = cameraControlRef.current
 
       // カメラの位置をターゲットからのオフセットで設定
-      const offset = new Vector3(5, 0, 0).applyEuler(rotation)
+      const offset = new Vector3(1, 0, 0).applyEuler(rotation)
       const cameraPosition = position.clone().add(offset)
 
       cameraControls.setPosition(
@@ -35,12 +35,17 @@ export default function Model({ filename }) {
     const cameraControls = cameraControlRef.current
 
     if (cameraControls) {
-      // カメラの現在の位置と回転を取得
-      const position = new Vector3(
-        cameraControls.camera.position.x,
-        cameraControls.camera.position.y,
-        cameraControls.camera.position.z
+      // カメラの位置と方向を取得
+      const cameraPosition = cameraControls.camera.position.clone()
+      const cameraDirection = new Vector3()
+      cameraControls.camera.getWorldDirection(cameraDirection)
+
+      // カメラの前方に一定距離オフセット
+      const offsetDistance = 3 // カメラの前方に5ユニット
+      const spherePosition = cameraPosition.add(
+        cameraDirection.multiplyScalar(offsetDistance)
       )
+
       const rotation = new Euler(
         cameraControls.camera.rotation.x,
         cameraControls.camera.rotation.y,
@@ -48,7 +53,7 @@ export default function Model({ filename }) {
       )
 
       // Sphereの位置と回転を保存
-      setSpheres((prev) => [...prev, position])
+      setSpheres((prev) => [...prev, spherePosition])
       setSphereRotations((prev) => [...prev, rotation])
     } else {
       console.error('CameraControls reference is not set')
