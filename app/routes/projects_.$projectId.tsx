@@ -4,7 +4,7 @@ import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import Model from '~/components/model'
 import Button from '~/components/Button'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import ConfirmModal from '~/components/ConfirmModal'
 import Back from '~/components/Back'
 import { prisma } from '~/db.server'
@@ -70,6 +70,12 @@ export default function Project() {
     console.log('register', position, rotation)
   }
 
+  useEffect(() => {
+    spheres.map((v) => {
+      console.log(v)
+    })
+  }, [spheres])
+
   return (
     <>
       <div>
@@ -107,24 +113,20 @@ export default function Project() {
             style={{
               position: 'absolute',
               zIndex: 1,
-              backgroundColor: 'rgb(59 59 59 / 83%)',
               color: 'white',
               height: '88vh',
               maxWidth: '250px',
             }}
-            className="flex flex-col gap-10 pt-20"
+            className="flex flex-col gap-5 pt-20"
           >
             {spheres.map((s: any) => {
-              {
-                console.log(s.position)
-              }
               return (
-                <div className="px-5">
+                <div className="ml-5 px-5 bg-white border-gray-200 text-black py-5">
                   <div>title</div>
-                  <div style={{ overflowWrap: 'anywhere' }}>
-                    contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent
+                  <div style={{ overflowWrap: 'anywhere' }}>content</div>
+                  <div style={{ fontSize: '10px' }}>
+                    x:{s.x} y:{s.y} z:{s.z}
                   </div>
-                  <div>{s.position}</div>
                 </div>
               )
             })}
