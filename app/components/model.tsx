@@ -2,16 +2,26 @@ import { CameraControls, OrbitControls, Gltf } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useRef, useState, Suspense } from 'react'
 import { Vector3, Euler, MathUtils } from 'three'
+import Button from './Button'
 import Loader from './Loader'
 
-export default function Model({ filename }) {
-  const orbitControlsRef = useRef()
-  const cameraControlRef = useRef() // CameraControlsの参照
-  const [spheres, setSpheres] = useState([]) // Sphereの位置
+export default function Model({
+  filename,
+  cameraControlRef,
+  spheres,
+  setSpheres,
+  registerNote,
+}: {
+  filename: string
+  cameraControlRef: any
+  spheres: any
+  setSpheres: any
+  registerNote: any
+}) {
   const [sphereRotations, setSphereRotations] = useState([]) // Sphereの回転
 
   // Sphereクリック時にカメラを更新
-  const handleSphereClick = (position, rotation) => {
+  const handleSphereClick = (position: any, rotation: any) => {
     if (cameraControlRef.current) {
       const cameraControls = cameraControlRef.current
 
@@ -52,21 +62,11 @@ export default function Model({ filename }) {
         cameraControls.camera.rotation.z
       )
 
+      registerNote(spherePosition, rotation)
+
       // Sphereの位置と回転を保存
-      setSpheres((prev) => [...prev, spherePosition])
-      setSphereRotations((prev) => [...prev, rotation])
-    } else {
-      console.error('CameraControls reference is not set')
-    }
-  }
-
-  const changeRotation = () => {
-    if (cameraControlRef.current) {
-      const cameraControls = cameraControlRef.current
-
-      // Y軸を90度回転
-      const newRotation = MathUtils.degToRad(90)
-      cameraControls.rotate(newRotation, 0, true)
+      setSpheres((prev: any) => [...prev, spherePosition])
+      setSphereRotations((prev: any) => [...prev, rotation])
     } else {
       console.error('CameraControls reference is not set')
     }
@@ -74,13 +74,18 @@ export default function Model({ filename }) {
 
   return (
     <>
-      <div>
-        <div>
-          <button onClick={addSphere}>Add Sphere at Current Position</button>
-        </div>
-        <div>
-          <button onClick={changeRotation}>Change Rotation</button>
-        </div>
+      <div
+        style={{
+          position: 'relative',
+          left: '20px',
+          bottom: '-20px',
+          height: 0,
+          zIndex: 1,
+        }}
+      >
+        <Button bgColor="black" textColor="white" onClick={addSphere}>
+          Add view point
+        </Button>
       </div>
 
       <Canvas

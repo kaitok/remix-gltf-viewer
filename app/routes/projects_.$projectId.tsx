@@ -3,26 +3,11 @@ import { json, redirect } from '@remix-run/node'
 import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import Model from '~/components/model'
-import { dateFormat } from '~/utils/dateformat'
 import Button from '~/components/Button'
-import LinkButton from '~/components/LinkButton'
 import { useState, useRef } from 'react'
 import ConfirmModal from '~/components/ConfirmModal'
 import Back from '~/components/Back'
 import { prisma } from '~/db.server'
-
-import {
-  Environment,
-  Stats,
-  OrbitControls,
-  Circle,
-  Gltf,
-  useGLTF,
-} from '@react-three/drei'
-import { Canvas, useLoader } from '@react-three/fiber'
-import { GLTFLoader } from 'three-stdlib'
-import { Suspense } from 'react'
-import model from '../models/scene2.glb'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const projectId = params.projectId
@@ -78,6 +63,13 @@ export default function Project() {
     setOpen(true)
   }
 
+  const cameraControlRef = useRef()
+  const [spheres, setSpheres] = useState([]) // Sphereの位置
+
+  const registerNote = (position: any, rotation: any) => {
+    console.log('register', position, rotation)
+  }
+
   return (
     <>
       <div>
@@ -89,7 +81,7 @@ export default function Project() {
           execButtonTitle="Delete"
         />
 
-        <div className="px-6 pt-5 flex flex-row justify-between w-full items-center">
+        <div className="px-6 py-5 flex flex-row justify-between w-full items-center">
           <div className="flex flex-row gap-10">
             <Back href="/" label="projects" />
             <div className="flex flex-col">
@@ -111,7 +103,39 @@ export default function Project() {
         </div>
 
         <div style={{ height: '88vh' }}>
-          <Model filename={project?.objectURL || ''} />
+          <div
+            style={{
+              position: 'absolute',
+              zIndex: 1,
+              backgroundColor: 'rgb(59 59 59 / 83%)',
+              color: 'white',
+              height: '88vh',
+              maxWidth: '250px',
+            }}
+            className="flex flex-col gap-10 pt-20"
+          >
+            {spheres.map((s: any) => {
+              {
+                console.log(s.position)
+              }
+              return (
+                <div className="px-5">
+                  <div>title</div>
+                  <div style={{ overflowWrap: 'anywhere' }}>
+                    contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent
+                  </div>
+                  <div>{s.position}</div>
+                </div>
+              )
+            })}
+          </div>
+          <Model
+            filename={project?.objectURL || ''}
+            cameraControlRef={cameraControlRef}
+            spheres={spheres}
+            setSpheres={setSpheres}
+            registerNote={registerNote}
+          />
         </div>
       </div>
     </>
