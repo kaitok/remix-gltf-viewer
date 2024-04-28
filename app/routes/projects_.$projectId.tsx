@@ -64,17 +64,17 @@ export default function Project() {
   }
 
   const cameraControlRef = useRef()
-  const [spheres, setSpheres] = useState([]) // Sphereの位置
+  const [viewPoints, setViewPoints] = useState([])
 
   const registerNote = (position: any, rotation: any) => {
     console.log('register', position, rotation)
   }
 
   useEffect(() => {
-    spheres.map((v) => {
+    viewPoints.map((v) => {
       console.log(v)
     })
-  }, [spheres])
+  }, [viewPoints])
 
   return (
     <>
@@ -117,7 +117,7 @@ export default function Project() {
             }}
             className="flex flex-col gap-5 pt-20"
           >
-            {spheres.map((s: any) => {
+            {viewPoints.map((s: any) => {
               return (
                 <div className="ml-5 px-5 bg-white border-gray-200  border-b-[1px] text-black py-5">
                   <div>title</div>
@@ -132,8 +132,8 @@ export default function Project() {
           <Model
             filename={project?.objectURL || ''}
             cameraControlRef={cameraControlRef}
-            spheres={spheres}
-            setSpheres={setSpheres}
+            viewPoints={viewPoints}
+            setViewPoints={setViewPoints}
             registerNote={registerNote}
           />
         </div>
