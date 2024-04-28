@@ -45,7 +45,7 @@ export default function App() {
         }}
       >
         <header>
-          <nav className="border-gray-200 px-5 lg:px-6 py-4  border-b-[.8px]">
+          <nav className="border-gray-200 border-b-[1px] px-5 lg:px-6 py-4">
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
               <div>
                 <a href="/" className="flex items-center">

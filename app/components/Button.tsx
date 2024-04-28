@@ -25,7 +25,7 @@ const Button = ({
     base = 'h-8 min-w-12 py-1.5 px-3 text-xs font-sm'
   }
   if (border) {
-    base += ' border border-gray-400'
+    base += ' border border-gray-200 border-b-[1px]'
   }
 
   // due to tailwind dosen't support dynamic class name like `bg-${bgColor}-600`
@@ -34,8 +34,8 @@ const Button = ({
   return (
     <button
       type={type ? type : 'button'}
-      className={`text-center ${base} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 ${
-        disabled ? 'opacity-50 hover:opacity-50' : ''
+      className={`text-center ${base} text-${textColor} ${bgStyle} rounded-sm focus:outline-none ${
+        disabled ? 'opacity-50 ' : 'hover:opacity-70'
       }`}
       style={style}
       onClick={onClick}

@@ -2,7 +2,7 @@
 const getBgStyle = (bgColor: string | undefined) => {
   let bgStyle = 'bg-gray-600'
   if (bgColor === 'black') {
-    bgStyle = `bg-black`
+    bgStyle = `bg-zinc-700`
   } else if (bgColor === 'white') {
     bgStyle = `bg-fafafa`
   } else if (bgColor === 'red') {

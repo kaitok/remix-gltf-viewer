@@ -38,7 +38,7 @@ export default function Screen() {
               type="username"
               id="username"
               name="username"
-              className="rounded-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              className="rounded-sm bg-gray-50 border border-gray-200 border-b-[1px] text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               required
             />
           </div>
@@ -55,7 +55,7 @@ export default function Screen() {
               name="password"
               id="password"
               autoComplete="current-password"
-              className="rounded-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              className="rounded-sm bg-gray-50 border border-gray-200 border-b-[1px] text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               required
             />
           </div>

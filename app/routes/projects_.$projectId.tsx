@@ -120,7 +120,7 @@ export default function Project() {
           >
             {spheres.map((s: any) => {
               return (
-                <div className="ml-5 px-5 bg-white border-gray-200 text-black py-5">
+                <div className="ml-5 px-5 bg-white border-gray-200  border-b-[1px] text-black py-5">
                   <div>title</div>
                   <div style={{ overflowWrap: 'anywhere' }}>content</div>
                   <div style={{ fontSize: '10px' }}>
