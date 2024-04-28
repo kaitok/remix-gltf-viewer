@@ -87,7 +87,7 @@ export default function Project() {
           execButtonTitle="Delete"
         />
 
-        <div className="px-6 py-5 flex flex-row justify-between w-full items-center">
+        <div className="px-6 py-2 flex flex-row justify-between w-full items-center">
           <div className="flex flex-row gap-10">
             <Back href="/" label="projects" />
             <div className="flex flex-col">
@@ -99,8 +99,7 @@ export default function Project() {
           <div className="pt-1 flex gap-1">
             <Button
               size="sm"
-              textColor="white"
-              bgColor="red"
+              style={{ backgroundColor: '#fafafa' }}
               onClick={handleClickDelete}
             >
               Delete
