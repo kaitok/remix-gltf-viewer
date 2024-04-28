@@ -20,12 +20,12 @@ const Button = ({
   type?: 'button' | 'submit' | 'reset'
   style?: any
 }) => {
-  let base = 'py-2 px-3 text-sm'
+  let base = 'py-2 px-3 text-sm cursor-pointer'
   if (size == 'sm') {
     base = 'h-8 min-w-12 py-1.5 px-3 text-xs font-sm'
   }
   if (border) {
-    base += ' border border-gray-200 border-b-[1px]'
+    base += ' border border-gray-300 border-b-[1px]'
   }
 
   // due to tailwind dosen't support dynamic class name like `bg-${bgColor}-600`

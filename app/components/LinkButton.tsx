@@ -17,7 +17,7 @@ const LinkButton = ({
   border?: boolean
   className?: string
 }) => {
-  let style = 'py-2.5 px-5 text-sm font-medium'
+  let style = 'py-2.5 px-5 text-sm font-medium cursor-pointer'
   if (size == 'sm') {
     style = 'h-8 min-w-12 py-[0.45rem] text-xs font-sm'
   }
