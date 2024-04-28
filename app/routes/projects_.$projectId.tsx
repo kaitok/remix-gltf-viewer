@@ -113,7 +113,6 @@ export default function Project() {
               position: 'absolute',
               zIndex: 1,
               color: 'white',
-              height: '88vh',
               maxWidth: '250px',
             }}
             className="flex flex-col gap-5 pt-20"
