@@ -129,7 +129,7 @@ export default function Model({
 
       <Canvas
         camera={{ fov: 75, position: [0, 0, 20] }}
-        style={{ backgroundColor: '#f3f3f3', borderTop: '1px solid #e5e7eb' }}
+        style={{ backgroundColor: '#E5E5E5', borderTop: '1px solid #e5e7eb' }}
       >
         <ambientLight intensity={Math.PI / 2} />
         <spotLight
