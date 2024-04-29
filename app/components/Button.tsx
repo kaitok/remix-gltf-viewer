@@ -23,6 +23,8 @@ const Button = ({
   let base = 'py-2 px-3 text-sm cursor-pointer'
   if (size == 'sm') {
     base = 'h-8 min-w-12 py-1.5 px-3 text-xs font-sm'
+  } else if (size == 'xs') {
+    base = 'h-6 min-w-8 py-1 px-2 text-xs font-xs'
   }
   if (border) {
     base += ' border border-gray-300 border-b-[1px]'

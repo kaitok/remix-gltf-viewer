@@ -1,18 +1,7 @@
 import { CameraControls, OrbitControls, Gltf } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useRef, useState, Suspense } from 'react'
-import {
-  Vector3,
-  Euler,
-  MathUtils,
-  BoxGeometry,
-  MeshBasicMaterial,
-  Mesh,
-  Quaternion,
-  EdgesGeometry,
-  LineSegments,
-  LineBasicMaterial,
-} from 'three'
+import { Vector3, Euler } from 'three'
 import * as THREE from 'three'
 import Button from './Button'
 import Loader from './Loader'
@@ -56,7 +45,7 @@ export default function Model({
     const cameraControls = cameraControlRef.current
 
     if (cameraControls) {
-      // カメラの位置と方向を取得
+      // get camera position
       const cameraPosition = cameraControls.camera.position.clone()
       const cameraDirection = new Vector3()
       cameraControls.camera.getWorldDirection(cameraDirection)
@@ -74,8 +63,10 @@ export default function Model({
       setViewPoints((prev: any) => [
         ...prev,
         {
-          position: boxPosition,
-          rotation: cameraRotation,
+          position: JSON.stringify(boxPosition),
+          rotation: JSON.stringify(cameraRotation),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       ])
       // setViewPointsRotations((prev: any) => [...prev, cameraRotation])
@@ -91,7 +82,7 @@ export default function Model({
       <mesh position={pos} rotation={rotation} onClick={onClick}>
         <boxGeometry args={boxSize} />
         <meshStandardMaterial
-          color="#ff5100"
+          color="#ff4d00"
           opacity={0.7}
           transparent={true}
         />
