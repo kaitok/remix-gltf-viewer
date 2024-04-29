@@ -1,13 +1,14 @@
 import { PrismaClient } from '@prisma/client'
 import { json, redirect } from '@remix-run/node'
 import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useNavigate } from '@remix-run/react'
+import { useLoaderData, useSubmit } from '@remix-run/react'
 import Model from '~/components/model'
 import Button from '~/components/Button'
 import { useState, useRef, useEffect } from 'react'
 import ConfirmModal from '~/components/ConfirmModal'
 import Back from '~/components/Back'
 import { prisma } from '~/db.server'
+import { getSession } from '~/services/session.server'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const projectId = params.projectId
@@ -27,9 +28,29 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   const projectId = params.projectId
   if (!projectId) return
-  await deleteNotes(projectId)
-  await deleteProject(projectId)
-  return redirect('/')
+
+  const formData = await request.formData()
+
+  if (formData.get('intent') === 'create') {
+    console.log('position', formData.get('position'))
+    console.log('rotation', formData.get('rotation'))
+
+    let session = await getSession(request.headers.get('Cookie'))
+    await prisma.note.create({
+      data: {
+        title: 'test',
+        projectId: projectId,
+        authorId: session.data.user.id,
+        position: JSON.stringify(formData.get('position')),
+        rotation: JSON.stringify(formData.get('rotation')),
+      },
+    })
+    return null
+  } else {
+    await deleteNotes(projectId)
+    await deleteProject(projectId)
+    return redirect('/')
+  }
 }
 
 const deleteProject = async (projectId: string) => {
@@ -56,7 +77,7 @@ const deleteNotes = async (projectId: string) => {
 
 export default function Project() {
   const { project, notes, projectId } = useLoaderData<typeof loader>()
-
+  const submit = useSubmit()
   const [open, setOpen] = useState(false)
   const cancelButtonRef = useRef(null)
   const handleClickDelete = () => {
@@ -66,8 +87,9 @@ export default function Project() {
   const cameraControlRef = useRef()
   const [viewPoints, setViewPoints] = useState([])
 
-  const registerNote = (position: any, rotation: any) => {
+  const registerNote = async (position: any, rotation: any) => {
     console.log('register', position, rotation)
+    submit({ position, rotation, intent: 'create' }, { method: 'post' })
   }
 
   useEffect(() => {
