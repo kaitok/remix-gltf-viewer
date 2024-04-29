@@ -8,8 +8,9 @@ const Button = ({
   onClick,
   disabled,
   type,
+  style,
 }: {
-  textColor: string
+  textColor?: string
   children: React.ReactNode
   size?: string
   bgColor?: string
@@ -17,13 +18,16 @@ const Button = ({
   onClick?: () => void
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
+  style?: any
 }) => {
-  let style = 'py-2 px-3 text-sm'
+  let base = 'py-2 px-3 text-sm cursor-pointer'
   if (size == 'sm') {
-    style = 'h-8 min-w-12 py-1.5 px-3 text-xs font-sm'
+    base = 'h-8 min-w-12 py-1.5 px-3 text-xs font-sm'
+  } else if (size == 'xs') {
+    base = 'h-6 min-w-8 py-1 px-2 text-xs font-xs'
   }
   if (border) {
-    style += ' border border-gray-400'
+    base += ' border border-gray-300 border-b-[1px]'
   }
 
   // due to tailwind dosen't support dynamic class name like `bg-${bgColor}-600`
@@ -32,9 +36,10 @@ const Button = ({
   return (
     <button
       type={type ? type : 'button'}
-      className={`text-center ${style} text-${textColor} ${bgStyle} rounded-sm focus:outline-none hover:opacity-90 ${
-        disabled ? 'opacity-50 hover:opacity-50' : ''
+      className={`text-center ${base} text-${textColor} ${bgStyle} rounded-sm focus:outline-none ${
+        disabled ? 'opacity-50 ' : 'hover:opacity-70'
       }`}
+      style={style}
       onClick={onClick}
       disabled={disabled}
     >

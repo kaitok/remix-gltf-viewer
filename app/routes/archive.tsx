@@ -142,7 +142,7 @@ export default function Archives() {
               return (
                 <div
                   key={v.id}
-                  className="max-w-sm p-6 bg-white border border-gray-200 rounded-sm shadow hover:bg-gray-100 min-w-32 flex items-center cursor-pointer"
+                  className="max-w-sm p-6 bg-white border border-gray-200 border-b-[1px] rounded-sm shadow hover:bg-gray-100 min-w-32 flex items-center cursor-pointer"
                   onClick={() => handleCheckboxChange(v.id)}
                 >
                   <div className="flex items-baseline">

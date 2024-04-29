@@ -1,17 +1,25 @@
 import { CameraControls, OrbitControls, Gltf } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useRef, useState, Suspense } from 'react'
-import { Vector3, Euler, MathUtils } from 'three'
+import { Vector3, Euler } from 'three'
+import * as THREE from 'three'
+import Button from './Button'
 import Loader from './Loader'
 
-export default function Model({ filename }) {
-  const orbitControlsRef = useRef()
-  const cameraControlRef = useRef() // CameraControlsの参照
-  const [spheres, setSpheres] = useState([]) // Sphereの位置
-  const [sphereRotations, setSphereRotations] = useState([]) // Sphereの回転
-
-  // Sphereクリック時にカメラを更新
-  const handleSphereClick = (position, rotation) => {
+export default function Model({
+  filename,
+  cameraControlRef,
+  viewPoints,
+  setViewPoints,
+  registerNote,
+}: {
+  filename: string
+  cameraControlRef: any
+  viewPoints: any
+  setViewPoints?: any
+  registerNote: any
+}) {
+  const handleViewPointClick = (position: any, rotation: any) => {
     if (cameraControlRef.current) {
       const cameraControls = cameraControlRef.current
 
@@ -23,69 +31,100 @@ export default function Model({ filename }) {
         cameraPosition.x,
         cameraPosition.y,
         cameraPosition.z,
-        true // アニメーションで設定
+        true
       )
+      cameraControls.camera.rotation.copy(rotation)
     } else {
       console.error('CameraControls reference is not set')
     }
   }
 
-  // Sphereを追加する
-  const addSphere = () => {
+  const addViewPoint = () => {
     const cameraControls = cameraControlRef.current
 
     if (cameraControls) {
-      // カメラの位置と方向を取得
+      // get camera position
       const cameraPosition = cameraControls.camera.position.clone()
       const cameraDirection = new Vector3()
       cameraControls.camera.getWorldDirection(cameraDirection)
 
       // カメラの前方に一定距離オフセット
-      const offsetDistance = 3 // カメラの前方に5ユニット
-      const spherePosition = cameraPosition.add(
+      const offsetDistance = 3 // カメラの前方に3ユニット
+      const boxPosition = cameraPosition.add(
         cameraDirection.multiplyScalar(offsetDistance)
       )
 
-      const rotation = new Euler(
-        cameraControls.camera.rotation.x,
-        cameraControls.camera.rotation.y,
-        cameraControls.camera.rotation.z
-      )
+      const cameraRotation = cameraControls.camera.rotation.clone()
+      registerNote(boxPosition, cameraRotation)
 
-      // Sphereの位置と回転を保存
-      setSpheres((prev) => [...prev, spherePosition])
-      setSphereRotations((prev) => [...prev, rotation])
+      // Boxの位置と回転を保存
+      // setViewPoints((prev: any) => [
+      //   ...prev,
+      //   {
+      //     position: JSON.stringify(boxPosition),
+      //     rotation: JSON.stringify(cameraRotation),
+      //     createdAt: new Date(),
+      //     updatedAt: new Date(),
+      //   },
+      // ])
+      // setViewPointsRotations((prev: any) => [...prev, cameraRotation])
     } else {
       console.error('CameraControls reference is not set')
     }
   }
 
-  const changeRotation = () => {
-    if (cameraControlRef.current) {
-      const cameraControls = cameraControlRef.current
+  const ViewPoint = ({ pos, rotation, onClick }) => {
+    const boxSize = [4, 2.5, 0.1]
 
-      // Y軸を90度回転
-      const newRotation = MathUtils.degToRad(90)
-      cameraControls.rotate(newRotation, 0, true)
-    } else {
-      console.error('CameraControls reference is not set')
-    }
+    const transparentBox = (
+      <mesh position={pos} rotation={rotation} onClick={onClick}>
+        <boxGeometry args={boxSize} />
+        <meshStandardMaterial
+          color="#ff4d00"
+          opacity={0.7}
+          transparent={true}
+        />
+      </mesh>
+    )
+
+    const wireframeBox = (
+      <mesh position={pos} rotation={rotation} onClick={onClick}>
+        <boxGeometry args={boxSize} />
+        <meshStandardMaterial
+          color="white"
+          wireframe={true}
+          wireframeLinewidth={40.0}
+        />
+      </mesh>
+    )
+
+    return (
+      <group>
+        {transparentBox}
+        {wireframeBox}
+      </group>
+    )
   }
 
   return (
     <>
-      <div>
-        <div>
-          <button onClick={addSphere}>Add Sphere at Current Position</button>
-        </div>
-        <div>
-          <button onClick={changeRotation}>Change Rotation</button>
-        </div>
+      <div
+        style={{
+          position: 'relative',
+          left: '20px',
+          bottom: '-20px',
+          height: 0,
+          zIndex: 2,
+        }}
+      >
+        <Button bgColor="black" textColor="white" onClick={addViewPoint}>
+          Add view point
+        </Button>
       </div>
 
       <Canvas
         camera={{ fov: 75, position: [0, 0, 20] }}
-        style={{ backgroundColor: '#f3f3f3', borderTop: '1px solid #e5e7eb' }}
+        style={{ backgroundColor: '#E5E5E5', borderTop: '1px solid #e5e7eb' }}
       >
         <ambientLight intensity={Math.PI / 2} />
         <spotLight
@@ -95,7 +134,7 @@ export default function Model({ filename }) {
           decay={0}
           intensity={Math.PI}
         />
-        <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
+        <pointLight position={[0, 0, 0]} decay={0} intensity={Math.PI} />
         <Suspense fallback={<Loader />}>
           <CameraControls ref={cameraControlRef} />
 
@@ -106,16 +145,31 @@ export default function Model({ filename }) {
             rotation={[0, Math.PI, 0]}
           />
 
-          {spheres.map((pos, idx) => (
-            <mesh
-              key={idx}
-              position={pos}
-              onClick={() => handleSphereClick(pos, sphereRotations[idx])}
-            >
-              <sphereGeometry args={[0.5, 16, 16]} />
-              <meshStandardMaterial color="red" />
-            </mesh>
-          ))}
+          {viewPoints.map((viewPoint: any, idx: number) => {
+            const parsedPosition = JSON.parse(viewPoint.position)
+            const parsedRotation = JSON.parse(viewPoint.rotation)
+
+            const pos = new Vector3(
+              parsedPosition.x,
+              parsedPosition.y,
+              parsedPosition.z
+            )
+            const rotation = new Euler(
+              parsedRotation._x,
+              parsedRotation._y,
+              parsedRotation._z,
+              parsedRotation._order
+            )
+
+            return (
+              <ViewPoint
+                key={idx}
+                pos={pos}
+                rotation={rotation}
+                onClick={() => handleViewPointClick(pos, rotation)}
+              />
+            )
+          })}
         </Suspense>
       </Canvas>
     </>

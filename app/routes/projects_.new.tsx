@@ -63,7 +63,7 @@ export default function New() {
                 type="text"
                 id="title"
                 name="title"
-                className="rounded-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                className="rounded-sm bg-gray-50 border border-gray-200 border-b-[1px] text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 required
               />
             </div>
@@ -78,7 +78,7 @@ export default function New() {
                 id="description"
                 name="description"
                 rows={4}
-                className="rounded-sm  p-2.5 w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                className="rounded-sm  p-2.5 w-full text-sm text-gray-900 bg-gray-50 border border-gray-200 border-b-[1px] focus:ring-blue-500 focus:border-blue-500"
               ></textarea>
             </div>
 
@@ -95,7 +95,7 @@ export default function New() {
                 aria-describedby="file"
                 id="file"
                 name="file"
-                className="rounded-sm text-sm text-stone-500 w-full bg-gray-50 border cursor-pointer border-gray-300 file:mr-5 file:py-2 file:px-3 file:text-xs file:font-medium file:bg-black file:border-none file:text-white hover:file:cursor-pointer hover:file:bg-gray-800 hover:file:text-gray-200"
+                className="rounded-sm text-sm text-stone-500 w-full bg-gray-50 border cursor-pointer border-gray-200 border-b-[1px] file:mr-5 file:py-2 file:px-3 file:text-xs file:font-medium file:bg-black file:border-none file:text-white hover:file:cursor-pointer hover:file:bg-gray-800 hover:file:text-gray-200"
                 required
               />
               <div className="mt-1 text-sm text-gray-500" id="file">
