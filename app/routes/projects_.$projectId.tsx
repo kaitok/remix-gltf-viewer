@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { json, redirect } from '@remix-run/node'
 import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useSubmit } from '@remix-run/react'
+import { useLoaderData, useSubmit, useRevalidator } from '@remix-run/react'
 import Model from '~/components/model'
 import Button from '~/components/Button'
 import { useState, useRef, useEffect } from 'react'
@@ -36,6 +36,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const notes: ViewPoint[] = await prisma.note.findMany({
     where: {
       projectId,
+      deleted: false,
     },
     orderBy: {
       createdAt: 'asc',
@@ -61,7 +62,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         rotation: (formData.get('rotation') as JsonValue) || '',
       },
     })
-    return null
   } else if (formData.get('intent') === 'update note') {
     await prisma.note.update({
       where: {
@@ -72,12 +72,21 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         content: formData.get('content') || '',
       },
     })
-    return null
+  } else if (formData.get('intent') === 'delete note') {
+    await prisma.note.update({
+      where: {
+        id: formData.get('id') || '',
+      },
+      data: {
+        deleted: true,
+      },
+    })
   } else {
     await deleteNotes(projectId)
     await deleteProject(projectId)
     return redirect('/')
   }
+  return null
 }
 
 const deleteProject = async (projectId: string) => {
@@ -103,25 +112,17 @@ const deleteNotes = async (projectId: string) => {
 }
 
 export default function Project() {
-  const { project, notes, projectId } = useTypedLoaderData<typeof loader>()
+  // データを取得
+  const { project, notes, projectId } = useTypedLoaderData()
   const submit = useSubmit()
+  const revalidator = useRevalidator()
+  const cameraControlRef = useRef()
+  const [editMode, setEditMode] = useState(notes.map(() => false)) // 編集状態を管理
+  const inputRefs = useRef(notes.map(() => null)) // inputフィールドの参照
+  const textareaRefs = useRef(notes.map(() => null)) // textareaフィールドの参照
   const [open, setOpen] = useState(false)
   const handleClickDelete = () => {
     setOpen(true)
-  }
-
-  const cameraControlRef = useRef()
-  const [viewPoints, setViewPoints] = useState<ViewPoint[]>(notes)
-
-  const registerNote = async (position: any, rotation: any) => {
-    submit(
-      {
-        position: JSON.stringify(position),
-        rotation: JSON.stringify(rotation),
-        intent: 'create',
-      },
-      { method: 'post' }
-    )
   }
 
   const handleNoteClick = (viewPoint: any) => {
@@ -157,38 +158,48 @@ export default function Project() {
     }
   }
 
-  const [editMode, setEditMode] = useState(viewPoints.map(() => false))
-  const inputRefs = useRef(viewPoints.map(() => null))
-  const textareaRefs = useRef(viewPoints.map(() => null))
-
-  const handleSave = (index: number) => {
+  const handleSave = (index) => {
+    // 編集モードを解除
     setEditMode((prev) => {
       const newEditMode = [...prev]
       newEditMode[index] = false
       return newEditMode
     })
 
-    console.log('Data saved for viewPoint:', viewPoints[index])
+    const title = inputRefs.current[index].value
+    const content = textareaRefs.current[index].value
 
-    const title: string = inputRefs?.current[index]?.value
-    const content: string = textareaRefs?.current[index]?.value
-
-    viewPoints[index].title = title
-    viewPoints[index].content = content
-    viewPoints[index].updatedAt = new Date()
-
+    // submitを使ってデータを更新
     submit(
       {
-        id: viewPoints[index].id,
+        id: notes[index].id,
         title,
         content,
         intent: 'update note',
       },
       { method: 'post' }
     )
+
+    // データの再取得
+    revalidator.revalidate()
   }
 
-  const handleEdit = (index: number) => {
+  const handleDelete = (index) => {
+    // submitを使ってデータを削除
+    submit(
+      {
+        id: notes[index].id,
+        intent: 'delete note',
+      },
+      { method: 'post' }
+    )
+
+    // データの再取得
+    revalidator.revalidate()
+  }
+
+  const handleEdit = (index) => {
+    // 編集モードをオン
     setEditMode((prev) => {
       const newEditMode = [...prev]
       newEditMode[index] = true
@@ -196,12 +207,24 @@ export default function Project() {
     })
   }
 
-  const handleCancel = (index: number) => {
+  const handleCancel = (index) => {
+    // 編集モードをオフ
     setEditMode((prev) => {
       const newEditMode = [...prev]
       newEditMode[index] = false
       return newEditMode
     })
+  }
+
+  const registerNote = async (position: any, rotation: any) => {
+    submit(
+      {
+        position: JSON.stringify(position),
+        rotation: JSON.stringify(rotation),
+        intent: 'create',
+      },
+      { method: 'post' }
+    )
   }
 
   return (
@@ -234,151 +257,108 @@ export default function Project() {
             </Button>
           </div>
         </div>
-
         <div style={{ height: '88vh' }}>
           <div
             style={{
               position: 'absolute',
               zIndex: 1,
               color: 'white',
-              maxWidth: '250px',
+              maxWidth: '400px',
+              minWidth: '300px',
               height: '88vh',
               overflow: 'scroll',
               paddingBottom: '50px',
             }}
             className="flex flex-col gap-5 pt-20"
           >
-            {viewPoints.map((viewPoint, index) => {
-              return (
-                <div
-                  key={index}
-                  className="ml-5 px-5 bg-white border-gray-200 border-b-[1px] text-black text-sm py-5"
-                  onClick={() => handleNoteClick(viewPoint)}
-                >
+            {notes.map((note, index) => (
+              <div
+                key={index}
+                className="ml-5 px-5 bg-white border-gray-200 border-b-[1px] text-black py-5"
+                onClick={() => handleNoteClick(note)}
+              >
+                {editMode[index] ? (
+                  <div className="flex flex-row-reverse gap-1">
+                    <Button
+                      size="xs"
+                      textColor="white"
+                      bgColor="black"
+                      onClick={() => handleSave(index)}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      size="xs"
+                      textColor="black"
+                      bgColor="white"
+                      onClick={() => handleCancel(index)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex flex-row-reverse gap-1">
+                    <Button
+                      size="xs"
+                      textColor="white"
+                      bgColor="black"
+                      onClick={() => handleEdit(index)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="xs"
+                      textColor="black"
+                      bgColor="white"
+                      onClick={() => handleDelete(index)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                )}
+                <div className="flex flex-col gap-1 pt-1">
                   {editMode[index] ? (
-                    <div className="flex flex-row-reverse gap-1">
-                      <div>
-                        <Button
-                          size="xs"
-                          textColor="white"
-                          bgColor="black"
-                          style={{
-                            fontSize: '10px',
-                            textAlign: 'right',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => handleSave(index)}
-                        >
-                          Save
-                        </Button>
-                      </div>
-                      <div>
-                        {editMode[index]}
-                        <Button
-                          size="xs"
-                          textColor="black"
-                          bgColor="white"
-                          style={{
-                            fontSize: '10px',
-                            textAlign: 'right',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => handleCancel(index)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
+                    <>
+                      <input
+                        ref={(ref) => {
+                          inputRefs.current[index] = ref
+                        }}
+                        defaultValue={note.title || ''}
+                        placeholder="Title"
+                        className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
+                      />
+                      <textarea
+                        ref={(ref) => {
+                          textareaRefs.current[index] = ref
+                        }}
+                        defaultValue={note.content || ''}
+                        placeholder="Content"
+                        style={{ height: '100px' }}
+                        className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
+                      />
+                    </>
                   ) : (
-                    <div className="flex flex-row-reverse gap-1">
-                      <div>
-                        <Button
-                          size="xs"
-                          textColor="white"
-                          bgColor="black"
-                          style={{
-                            fontSize: '10px',
-                            textAlign: 'right',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => handleEdit(index)}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                      <div>
-                        <Button
-                          size="xs"
-                          textColor="black"
-                          bgColor="white"
-                          style={{
-                            fontSize: '10px',
-                            textAlign: 'right',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => handleEdit(index)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
+                    <>
+                      <div>{note.title || 'No Title'}</div>
+                      <div>{note.content || 'No Content'}</div>
+                    </>
                   )}
-                  <div className="flex flex-col gap-1 pt-1">
+                  <div style={{ fontSize: '10px', paddingTop: '5px' }}>
                     <div>
-                      {editMode[index] ? (
-                        <input
-                          type="text"
-                          ref={(ref) => {
-                            inputRefs.current[index] = ref
-                          }}
-                          defaultValue={viewPoint.title || ''}
-                          placeholder="title"
-                          className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
-                        />
-                      ) : (
-                        <div onClick={() => handleEdit(index)}>
-                          {viewPoint.title || 'No Title'}
-                        </div>
-                      )}
+                      createdAt: {new Date(note.createdAt).toLocaleString('ja')}
                     </div>
-                    <div style={{ overflowWrap: 'anywhere' }}>
-                      {editMode[index] ? (
-                        <textarea
-                          ref={(ref) => {
-                            textareaRefs.current[index] = ref
-                          }}
-                          defaultValue={viewPoint.content || ''}
-                          placeholder="content"
-                          style={{ height: '100px' }}
-                          className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
-                        />
-                      ) : (
-                        <div onClick={() => handleEdit(index)}>
-                          {viewPoint.content || 'No Content'}
-                        </div>
-                      )}
-                    </div>
-
-                    <div style={{ fontSize: '10px', paddingTop: '5px' }}>
-                      <div>
-                        createdAt:
-                        {new Date(viewPoint.createdAt).toLocaleString('ja')}
-                      </div>
-                      <div>
-                        updatedAt:
-                        {new Date(viewPoint.updatedAt).toLocaleString('ja')}
-                      </div>
+                    <div>
+                      updatedAt: {new Date(note.updatedAt).toLocaleString('ja')}
                     </div>
                   </div>
                 </div>
-              )
-            })}
+              </div>
+            ))}
           </div>
           <Model
             filename={project?.objectURL || ''}
             cameraControlRef={cameraControlRef}
-            viewPoints={viewPoints}
-            setViewPoints={setViewPoints}
+            viewPoints={notes}
             registerNote={registerNote}
           />
         </div>
@@ -386,3 +366,309 @@ export default function Project() {
     </>
   )
 }
+
+// export default function Project() {
+//   const { project, notes, projectId } = useTypedLoaderData<typeof loader>()
+//   const submit = useSubmit()
+//   const [open, setOpen] = useState(false)
+//   const handleClickDelete = () => {
+//     setOpen(true)
+//   }
+
+//   const revalidator = useRevalidator()
+
+//   const cameraControlRef = useRef()
+//   const [viewPoints, setViewPoints] = useState<ViewPoint[]>(notes)
+
+//   const registerNote = async (position: any, rotation: any) => {
+//     submit(
+//       {
+//         position: JSON.stringify(position),
+//         rotation: JSON.stringify(rotation),
+//         intent: 'create',
+//       },
+//       { method: 'post' }
+//     )
+//   }
+
+// const handleNoteClick = (viewPoint: any) => {
+//   if (cameraControlRef.current) {
+//     const cameraControls = cameraControlRef.current
+//     const parsedPosition = JSON.parse(viewPoint.position)
+//     const parsedRotation = JSON.parse(viewPoint.rotation)
+
+//     const position = new Vector3(
+//       parsedPosition.x,
+//       parsedPosition.y,
+//       parsedPosition.z
+//     )
+//     const rotation = new Euler(
+//       parsedRotation._x,
+//       parsedRotation._y,
+//       parsedRotation._z,
+//       parsedRotation._order
+//     )
+
+//     const offset = new Vector3(1, 0, 0).applyEuler(rotation)
+//     const cameraPosition = position.clone().add(offset)
+
+//     cameraControls.setPosition(
+//       cameraPosition.x,
+//       cameraPosition.y,
+//       cameraPosition.z,
+//       true
+//     )
+//     cameraControls.camera.rotation.copy(rotation)
+//   } else {
+//     console.error('CameraControls reference is not set')
+//   }
+// }
+
+//   const [editMode, setEditMode] = useState(viewPoints.map(() => false))
+//   const inputRefs = useRef(viewPoints.map(() => null))
+//   const textareaRefs = useRef(viewPoints.map(() => null))
+
+//   const handleSave = (index: number) => {
+//     setEditMode((prev) => {
+//       const newEditMode = [...prev]
+//       newEditMode[index] = false
+//       return newEditMode
+//     })
+
+//     const title: string = inputRefs?.current[index]?.value
+//     const content: string = textareaRefs?.current[index]?.value
+
+//     console.log('edit', viewPoints[index])
+
+//     viewPoints[index].title = title
+//     viewPoints[index].content = content
+//     viewPoints[index].updatedAt = new Date()
+
+//     submit(
+//       {
+//         id: viewPoints[index].id,
+//         title,
+//         content,
+//         intent: 'update note',
+//       },
+//       { method: 'post' }
+//     )
+//   }
+
+//   const handleDelete = (index: number) => {
+//     const newViewPoints = [...viewPoints]
+//     newViewPoints.splice(index, 1)
+//     setViewPoints(newViewPoints)
+//     setEditMode((prev) => {
+//       const newEditMode = [...prev]
+//       newEditMode.splice(index, 1)
+//       return newEditMode
+//     })
+
+//     submit(
+//       {
+//         id: viewPoints[index].id,
+//         intent: 'delete note',
+//       },
+//       { method: 'post' }
+//     )
+//   }
+
+//   const handleEdit = (index: number) => {
+//     setEditMode((prev) => {
+//       const newEditMode = [...prev]
+//       newEditMode[index] = true
+//       return newEditMode
+//     })
+//   }
+
+//   const handleCancel = (index: number) => {
+//     setEditMode((prev) => {
+//       const newEditMode = [...prev]
+//       newEditMode[index] = false
+//       return newEditMode
+//     })
+//   }
+
+//   return (
+//     <>
+//       <div>
+//         <ConfirmModal
+//           open={open}
+//           setOpen={setOpen}
+//           title="Are you sure you want to delete this project?"
+//           description="This project will be deleted immediately, You can't undo this action."
+//           execButtonTitle="Delete"
+//         />
+
+//         <div className="px-6 py-2 flex flex-row justify-between w-full items-center">
+//           <div className="flex flex-row gap-10">
+//             <Back href="/" label="projects" />
+//             <div className="flex flex-col">
+//               <h2 className="text-md">{project?.title}</h2>
+//               <p className="text-sm">{project?.description}</p>
+//             </div>
+//           </div>
+
+//           <div className="pt-1 flex gap-1">
+//             <Button
+//               size="sm"
+//               style={{ backgroundColor: '#fafafa' }}
+//               onClick={handleClickDelete}
+//             >
+//               Delete
+//             </Button>
+//           </div>
+//         </div>
+
+//         <div style={{ height: '88vh' }}>
+//           <div
+//             style={{
+//               position: 'absolute',
+//               zIndex: 1,
+//               color: 'white',
+//               maxWidth: '250px',
+//               height: '88vh',
+//               overflow: 'scroll',
+//               paddingBottom: '50px',
+//             }}
+//             className="flex flex-col gap-5 pt-20"
+//           >
+//             {viewPoints.map((viewPoint, index) => {
+//               return (
+//                 <div
+//                   key={index}
+//                   className="ml-5 px-5 bg-white border-gray-200 border-b-[1px] text-black text-sm py-5"
+//                   onClick={() => handleNoteClick(viewPoint)}
+//                 >
+//                   {editMode[index] ? (
+//                     <div className="flex flex-row-reverse gap-1">
+//                       <div>
+//                         <Button
+//                           size="xs"
+//                           textColor="white"
+//                           bgColor="black"
+//                           style={{
+//                             fontSize: '10px',
+//                             textAlign: 'right',
+//                             cursor: 'pointer',
+//                           }}
+//                           onClick={() => handleSave(index)}
+//                         >
+//                           Save
+//                         </Button>
+//                       </div>
+//                       <div>
+//                         {editMode[index]}
+//                         <Button
+//                           size="xs"
+//                           textColor="black"
+//                           bgColor="white"
+//                           style={{
+//                             fontSize: '10px',
+//                             textAlign: 'right',
+//                             cursor: 'pointer',
+//                           }}
+//                           onClick={() => handleCancel(index)}
+//                         >
+//                           Cancel
+//                         </Button>
+//                       </div>
+//                     </div>
+//                   ) : (
+//                     <div className="flex flex-row-reverse gap-1">
+//                       <div>
+//                         <Button
+//                           size="xs"
+//                           textColor="white"
+//                           bgColor="black"
+//                           style={{
+//                             fontSize: '10px',
+//                             textAlign: 'right',
+//                             cursor: 'pointer',
+//                           }}
+//                           onClick={() => handleEdit(index)}
+//                         >
+//                           Edit
+//                         </Button>
+//                       </div>
+//                       <div>
+//                         <Button
+//                           size="xs"
+//                           textColor="black"
+//                           bgColor="white"
+//                           style={{
+//                             fontSize: '10px',
+//                             textAlign: 'right',
+//                             cursor: 'pointer',
+//                           }}
+//                           onClick={() => handleDelete(index)}
+//                         >
+//                           Delete
+//                         </Button>
+//                       </div>
+//                     </div>
+//                   )}
+//                   <div className="flex flex-col gap-1 pt-1">
+//                     <div>
+//                       {editMode[index] ? (
+//                         <input
+//                           type="text"
+//                           ref={(ref) => {
+//                             inputRefs.current[index] = ref
+//                           }}
+//                           defaultValue={viewPoint.title || ''}
+//                           placeholder="title"
+//                           className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
+//                         />
+//                       ) : (
+//                         <div onClick={() => handleEdit(index)}>
+//                           {viewPoint.title || 'No Title'}
+//                         </div>
+//                       )}
+//                     </div>
+//                     <div style={{ overflowWrap: 'anywhere' }}>
+//                       {editMode[index] ? (
+//                         <textarea
+//                           ref={(ref) => {
+//                             textareaRefs.current[index] = ref
+//                           }}
+//                           defaultValue={viewPoint.content || ''}
+//                           placeholder="content"
+//                           style={{ height: '100px' }}
+//                           className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
+//                         />
+//                       ) : (
+//                         <div onClick={() => handleEdit(index)}>
+//                           {viewPoint.content || 'No Content'}
+//                         </div>
+//                       )}
+//                     </div>
+
+//                     <div style={{ fontSize: '10px', paddingTop: '5px' }}>
+//                       <div>
+//                         createdAt:
+//                         {new Date(viewPoint.createdAt).toLocaleString('ja')}
+//                       </div>
+//                       <div>
+//                         updatedAt:
+//                         {new Date(viewPoint.updatedAt).toLocaleString('ja')}
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               )
+//             })}
+//           </div>
+//           <Model
+//             filename={project?.objectURL || ''}
+//             cameraControlRef={cameraControlRef}
+//             viewPoints={viewPoints}
+//             setViewPoints={setViewPoints}
+//             registerNote={registerNote}
+//           />
+//         </div>
+//       </div>
+//     </>
+//   )
+// }

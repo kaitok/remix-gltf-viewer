@@ -16,11 +16,9 @@ export default function Model({
   filename: string
   cameraControlRef: any
   viewPoints: any
-  setViewPoints: any
+  setViewPoints?: any
   registerNote: any
 }) {
-  const [viewPointsRotations, setViewPointsRotations] = useState([])
-
   const handleViewPointClick = (position: any, rotation: any) => {
     if (cameraControlRef.current) {
       const cameraControls = cameraControlRef.current
@@ -60,15 +58,15 @@ export default function Model({
       registerNote(boxPosition, cameraRotation)
 
       // Boxの位置と回転を保存
-      setViewPoints((prev: any) => [
-        ...prev,
-        {
-          position: JSON.stringify(boxPosition),
-          rotation: JSON.stringify(cameraRotation),
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ])
+      // setViewPoints((prev: any) => [
+      //   ...prev,
+      //   {
+      //     position: JSON.stringify(boxPosition),
+      //     rotation: JSON.stringify(cameraRotation),
+      //     createdAt: new Date(),
+      //     updatedAt: new Date(),
+      //   },
+      // ])
       // setViewPointsRotations((prev: any) => [...prev, cameraRotation])
     } else {
       console.error('CameraControls reference is not set')
