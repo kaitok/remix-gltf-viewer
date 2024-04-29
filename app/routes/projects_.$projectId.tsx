@@ -88,7 +88,6 @@ export default function Project() {
   const [viewPoints, setViewPoints] = useState([])
 
   const registerNote = async (position: any, rotation: any) => {
-    console.log('register', position, rotation)
     submit({ position, rotation, intent: 'create' }, { method: 'post' })
   }
 
