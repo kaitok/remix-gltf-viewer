@@ -37,6 +37,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     where: {
       projectId,
     },
+    orderBy: {
+      createdAt: 'asc',
+    },
   })
   return typedjson({ project, notes, projectId })
 }
@@ -56,6 +59,17 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         authorId: session.data.user.id,
         position: (formData.get('position') as JsonValue) || '',
         rotation: (formData.get('rotation') as JsonValue) || '',
+      },
+    })
+    return null
+  } else if (formData.get('intent') === 'update note') {
+    await prisma.note.update({
+      where: {
+        id: formData.get('id') || '',
+      },
+      data: {
+        title: formData.get('title') || '',
+        content: formData.get('content') || '',
       },
     })
     return null
@@ -92,7 +106,6 @@ export default function Project() {
   const { project, notes, projectId } = useTypedLoaderData<typeof loader>()
   const submit = useSubmit()
   const [open, setOpen] = useState(false)
-  const cancelButtonRef = useRef(null)
   const handleClickDelete = () => {
     setOpen(true)
   }
@@ -114,7 +127,6 @@ export default function Project() {
   const handleNoteClick = (viewPoint: any) => {
     if (cameraControlRef.current) {
       const cameraControls = cameraControlRef.current
-
       const parsedPosition = JSON.parse(viewPoint.position)
       const parsedRotation = JSON.parse(viewPoint.rotation)
 
@@ -130,7 +142,6 @@ export default function Project() {
         parsedRotation._order
       )
 
-      // カメラの位置をターゲットからのオフセットで設定
       const offset = new Vector3(1, 0, 0).applyEuler(rotation)
       const cameraPosition = position.clone().add(offset)
 
@@ -144,6 +155,53 @@ export default function Project() {
     } else {
       console.error('CameraControls reference is not set')
     }
+  }
+
+  const [editMode, setEditMode] = useState(viewPoints.map(() => false))
+  const inputRefs = useRef(viewPoints.map(() => null))
+  const textareaRefs = useRef(viewPoints.map(() => null))
+
+  const handleSave = (index: number) => {
+    setEditMode((prev) => {
+      const newEditMode = [...prev]
+      newEditMode[index] = false
+      return newEditMode
+    })
+
+    console.log('Data saved for viewPoint:', viewPoints[index])
+
+    const title: string = inputRefs?.current[index]?.value
+    const content: string = textareaRefs?.current[index]?.value
+
+    viewPoints[index].title = title
+    viewPoints[index].content = content
+    viewPoints[index].updatedAt = new Date()
+
+    submit(
+      {
+        id: viewPoints[index].id,
+        title,
+        content,
+        intent: 'update note',
+      },
+      { method: 'post' }
+    )
+  }
+
+  const handleEdit = (index: number) => {
+    setEditMode((prev) => {
+      const newEditMode = [...prev]
+      newEditMode[index] = true
+      return newEditMode
+    })
+  }
+
+  const handleCancel = (index: number) => {
+    setEditMode((prev) => {
+      const newEditMode = [...prev]
+      newEditMode[index] = false
+      return newEditMode
+    })
   }
 
   return (
@@ -190,36 +248,15 @@ export default function Project() {
             }}
             className="flex flex-col gap-5 pt-20"
           >
-            {viewPoints.map((viewPoint: any) => {
+            {viewPoints.map((viewPoint, index) => {
               return (
                 <div
-                  className="ml-5 px-5 bg-white border-gray-200  border-b-[1px] text-black py-5"
+                  key={index}
+                  className="ml-5 px-5 bg-white border-gray-200 border-b-[1px] text-black text-sm py-5"
                   onClick={() => handleNoteClick(viewPoint)}
                 >
-                  <div className="flex flex-col gap-2 pt-3">
-                    <div>
-                      {viewPoint.title ? (
-                        viewPoint.title
-                      ) : (
-                        <input
-                          type="text"
-                          placeholder="title"
-                          className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
-                        />
-                      )}
-                    </div>
-                    <div style={{ overflowWrap: 'anywhere' }}>
-                      {viewPoint.content ? (
-                        viewPoint.content
-                      ) : (
-                        <textarea
-                          placeholder="content"
-                          style={{ height: '100px' }}
-                          className="border border-gray-200 border-b-[1px] p-1 text-sm w-full "
-                        />
-                      )}
-                    </div>
-                    <div className="flex flex-row-reverse gap-2">
+                  {editMode[index] ? (
+                    <div className="flex flex-row-reverse gap-1">
                       <div>
                         <Button
                           size="xs"
@@ -230,8 +267,43 @@ export default function Project() {
                             textAlign: 'right',
                             cursor: 'pointer',
                           }}
+                          onClick={() => handleSave(index)}
                         >
                           Save
+                        </Button>
+                      </div>
+                      <div>
+                        {editMode[index]}
+                        <Button
+                          size="xs"
+                          textColor="black"
+                          bgColor="white"
+                          style={{
+                            fontSize: '10px',
+                            textAlign: 'right',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => handleCancel(index)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-row-reverse gap-1">
+                      <div>
+                        <Button
+                          size="xs"
+                          textColor="white"
+                          bgColor="black"
+                          style={{
+                            fontSize: '10px',
+                            textAlign: 'right',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => handleEdit(index)}
+                        >
+                          Edit
                         </Button>
                       </div>
                       <div>
@@ -244,11 +316,49 @@ export default function Project() {
                             textAlign: 'right',
                             cursor: 'pointer',
                           }}
+                          onClick={() => handleEdit(index)}
                         >
                           Delete
                         </Button>
                       </div>
                     </div>
+                  )}
+                  <div className="flex flex-col gap-1 pt-1">
+                    <div>
+                      {editMode[index] ? (
+                        <input
+                          type="text"
+                          ref={(ref) => {
+                            inputRefs.current[index] = ref
+                          }}
+                          defaultValue={viewPoint.title || ''}
+                          placeholder="title"
+                          className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
+                        />
+                      ) : (
+                        <div onClick={() => handleEdit(index)}>
+                          {viewPoint.title || 'No Title'}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ overflowWrap: 'anywhere' }}>
+                      {editMode[index] ? (
+                        <textarea
+                          ref={(ref) => {
+                            textareaRefs.current[index] = ref
+                          }}
+                          defaultValue={viewPoint.content || ''}
+                          placeholder="content"
+                          style={{ height: '100px' }}
+                          className="border border-gray-200 border-b-[1px] p-1 text-sm w-full"
+                        />
+                      ) : (
+                        <div onClick={() => handleEdit(index)}>
+                          {viewPoint.content || 'No Content'}
+                        </div>
+                      )}
+                    </div>
+
                     <div style={{ fontSize: '10px', paddingTop: '5px' }}>
                       <div>
                         createdAt:
