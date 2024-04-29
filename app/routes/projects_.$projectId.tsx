@@ -112,14 +112,13 @@ const deleteNotes = async (projectId: string) => {
 }
 
 export default function Project() {
-  // データを取得
   const { project, notes, projectId } = useTypedLoaderData()
   const submit = useSubmit()
   const revalidator = useRevalidator()
   const cameraControlRef = useRef()
-  const [editMode, setEditMode] = useState(notes.map(() => false)) // 編集状態を管理
-  const inputRefs = useRef(notes.map(() => null)) // inputフィールドの参照
-  const textareaRefs = useRef(notes.map(() => null)) // textareaフィールドの参照
+  const [editMode, setEditMode] = useState(notes.map(() => false))
+  const inputRefs = useRef(notes.map(() => null))
+  const textareaRefs = useRef(notes.map(() => null))
   const [open, setOpen] = useState(false)
   const handleClickDelete = () => {
     setOpen(true)
@@ -159,7 +158,6 @@ export default function Project() {
   }
 
   const handleSave = (index) => {
-    // 編集モードを解除
     setEditMode((prev) => {
       const newEditMode = [...prev]
       newEditMode[index] = false
@@ -169,7 +167,6 @@ export default function Project() {
     const title = inputRefs.current[index].value
     const content = textareaRefs.current[index].value
 
-    // submitを使ってデータを更新
     submit(
       {
         id: notes[index].id,
@@ -180,12 +177,10 @@ export default function Project() {
       { method: 'post' }
     )
 
-    // データの再取得
     revalidator.revalidate()
   }
 
   const handleDelete = (index) => {
-    // submitを使ってデータを削除
     submit(
       {
         id: notes[index].id,
@@ -193,13 +188,10 @@ export default function Project() {
       },
       { method: 'post' }
     )
-
-    // データの再取得
     revalidator.revalidate()
   }
 
   const handleEdit = (index) => {
-    // 編集モードをオン
     setEditMode((prev) => {
       const newEditMode = [...prev]
       newEditMode[index] = true
@@ -208,7 +200,6 @@ export default function Project() {
   }
 
   const handleCancel = (index) => {
-    // 編集モードをオフ
     setEditMode((prev) => {
       const newEditMode = [...prev]
       newEditMode[index] = false
@@ -253,7 +244,7 @@ export default function Project() {
               style={{ backgroundColor: '#fafafa' }}
               onClick={handleClickDelete}
             >
-              Delete
+              Delete Project
             </Button>
           </div>
         </div>
