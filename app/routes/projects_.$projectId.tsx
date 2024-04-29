@@ -9,6 +9,21 @@ import ConfirmModal from '~/components/ConfirmModal'
 import Back from '~/components/Back'
 import { prisma } from '~/db.server'
 import { getSession } from '~/services/session.server'
+import { typedjson, useTypedLoaderData } from 'remix-typedjson'
+import type { JsonValue } from '@prisma/client/runtime/library'
+
+type ViewPoint = {
+  id: string
+  title: string
+  content: string | null
+  position: JsonValue
+  rotation: JsonValue
+  projectId: string
+  authorId: string
+  deleted: boolean
+  createdAt: Date
+  updatedAt: Date
+}
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const projectId = params.projectId
@@ -17,12 +32,12 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       id: projectId,
     },
   })
-  const notes = await prisma.note.findMany({
+  const notes: ViewPoint[] = await prisma.note.findMany({
     where: {
       projectId,
     },
   })
-  return json({ project, notes, projectId })
+  return typedjson({ project, notes, projectId })
 }
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
@@ -41,8 +56,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         title: 'test',
         projectId: projectId,
         authorId: session.data.user.id,
-        position: JSON.stringify(formData.get('position')),
-        rotation: JSON.stringify(formData.get('rotation')),
+        position: formData.get('position') || '',
+        rotation: formData.get('rotation') || '',
       },
     })
     return null
@@ -76,7 +91,7 @@ const deleteNotes = async (projectId: string) => {
 }
 
 export default function Project() {
-  const { project, notes, projectId } = useLoaderData<typeof loader>()
+  const { project, notes, projectId } = useTypedLoaderData<typeof loader>()
   const submit = useSubmit()
   const [open, setOpen] = useState(false)
   const cancelButtonRef = useRef(null)
@@ -85,10 +100,17 @@ export default function Project() {
   }
 
   const cameraControlRef = useRef()
-  const [viewPoints, setViewPoints] = useState([])
+  const [viewPoints, setViewPoints] = useState<ViewPoint[]>(notes)
 
   const registerNote = async (position: any, rotation: any) => {
-    submit({ position, rotation, intent: 'create' }, { method: 'post' })
+    // submit(
+    //   {
+    //     position: position,
+    //     rotation: rotation,
+    //     intent: 'create',
+    //   },
+    //   { method: 'post' }
+    // )
   }
 
   useEffect(() => {
@@ -139,12 +161,13 @@ export default function Project() {
             className="flex flex-col gap-5 pt-20"
           >
             {viewPoints.map((s: any) => {
+              const position = s.position
               return (
                 <div className="ml-5 px-5 bg-white border-gray-200  border-b-[1px] text-black py-5">
                   <div>title</div>
                   <div style={{ overflowWrap: 'anywhere' }}>content</div>
                   <div style={{ fontSize: '10px' }}>
-                    x:{s.x} y:{s.y} z:{s.z}
+                    x:{position.x} y:{position.y} z:{position.z}
                   </div>
                 </div>
               )

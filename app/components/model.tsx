@@ -71,8 +71,14 @@ export default function Model({
       registerNote(boxPosition, cameraRotation)
 
       // Boxの位置と回転を保存
-      setViewPoints((prev: any) => [...prev, boxPosition])
-      setViewPointsRotations((prev: any) => [...prev, cameraRotation])
+      setViewPoints((prev: any) => [
+        ...prev,
+        {
+          position: boxPosition,
+          rotation: cameraRotation,
+        },
+      ])
+      // setViewPointsRotations((prev: any) => [...prev, cameraRotation])
     } else {
       console.error('CameraControls reference is not set')
     }
@@ -80,6 +86,8 @@ export default function Model({
 
   const ViewPoint = ({ pos, rotation, onClick }) => {
     const boxSize = [4, 2.5, 0.1]
+    console.log('pos', pos)
+    console.log('rotation', rotation)
 
     const transparentBox = (
       <mesh position={pos} rotation={rotation} onClick={onClick}>
@@ -150,13 +158,16 @@ export default function Model({
             rotation={[0, Math.PI, 0]}
           />
 
-          {viewPoints.map((position, idx) => (
+          {viewPoints.map((viewPoint: any, idx: number) => (
             <ViewPoint
               key={idx}
-              pos={position}
-              rotation={viewPointsRotations[idx]}
+              pos={viewPoint.position as Vector3}
+              rotation={viewPoint.rotation as Euler}
               onClick={() =>
-                handleViewPointClick(position, viewPointsRotations[idx])
+                handleViewPointClick(
+                  viewPoint.position as Vector3,
+                  viewPoint.rotation as Euler
+                )
               }
             />
           ))}
