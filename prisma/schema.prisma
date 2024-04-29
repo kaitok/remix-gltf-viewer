@@ -40,8 +40,8 @@ model Note {
   id        String   @id @default(uuid())
   title     String
   content   String?
-  x         Float?
-  y         Float?
+  position  Json
+  rotation  Json
   projectId String
   project   Project  @relation(fields: [projectId], references: [id])
   authorId  String
