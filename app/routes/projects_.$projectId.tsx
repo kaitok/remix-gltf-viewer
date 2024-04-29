@@ -47,17 +47,14 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   const formData = await request.formData()
 
   if (formData.get('intent') === 'create') {
-    console.log('position', formData.get('position'))
-    console.log('rotation', formData.get('rotation'))
-
     let session = await getSession(request.headers.get('Cookie'))
     await prisma.note.create({
       data: {
         title: 'test',
         projectId: projectId,
         authorId: session.data.user.id,
-        position: formData.get('position') || '',
-        rotation: formData.get('rotation') || '',
+        position: (formData.get('position') as JsonValue) || '',
+        rotation: (formData.get('rotation') as JsonValue) || '',
       },
     })
     return null
@@ -103,21 +100,15 @@ export default function Project() {
   const [viewPoints, setViewPoints] = useState<ViewPoint[]>(notes)
 
   const registerNote = async (position: any, rotation: any) => {
-    // submit(
-    //   {
-    //     position: position,
-    //     rotation: rotation,
-    //     intent: 'create',
-    //   },
-    //   { method: 'post' }
-    // )
+    submit(
+      {
+        position: JSON.stringify(position),
+        rotation: JSON.stringify(rotation),
+        intent: 'create',
+      },
+      { method: 'post' }
+    )
   }
-
-  useEffect(() => {
-    viewPoints.map((v) => {
-      console.log(v)
-    })
-  }, [viewPoints])
 
   return (
     <>
@@ -160,14 +151,16 @@ export default function Project() {
             }}
             className="flex flex-col gap-5 pt-20"
           >
-            {viewPoints.map((s: any) => {
-              const position = s.position
+            {viewPoints.map((viewPoint: any) => {
               return (
                 <div className="ml-5 px-5 bg-white border-gray-200  border-b-[1px] text-black py-5">
-                  <div>title</div>
-                  <div style={{ overflowWrap: 'anywhere' }}>content</div>
+                  <div>{viewPoint.title}</div>
+                  <div style={{ overflowWrap: 'anywhere' }}>
+                    {viewPoint?.content}
+                  </div>
                   <div style={{ fontSize: '10px' }}>
-                    x:{position.x} y:{position.y} z:{position.z}
+                    updatedAt:
+                    {new Date(viewPoint.updatedAt).toLocaleString('ja')}
                   </div>
                 </div>
               )

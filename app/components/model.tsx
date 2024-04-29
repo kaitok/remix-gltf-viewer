@@ -86,8 +86,6 @@ export default function Model({
 
   const ViewPoint = ({ pos, rotation, onClick }) => {
     const boxSize = [4, 2.5, 0.1]
-    console.log('pos', pos)
-    console.log('rotation', rotation)
 
     const transparentBox = (
       <mesh position={pos} rotation={rotation} onClick={onClick}>
@@ -158,19 +156,31 @@ export default function Model({
             rotation={[0, Math.PI, 0]}
           />
 
-          {viewPoints.map((viewPoint: any, idx: number) => (
-            <ViewPoint
-              key={idx}
-              pos={viewPoint.position as Vector3}
-              rotation={viewPoint.rotation as Euler}
-              onClick={() =>
-                handleViewPointClick(
-                  viewPoint.position as Vector3,
-                  viewPoint.rotation as Euler
-                )
-              }
-            />
-          ))}
+          {viewPoints.map((viewPoint: any, idx: number) => {
+            const parsedPosition = JSON.parse(viewPoint.position)
+            const parsedRotation = JSON.parse(viewPoint.rotation)
+
+            const pos = new Vector3(
+              parsedPosition.x,
+              parsedPosition.y,
+              parsedPosition.z
+            )
+            const rotation = new Euler(
+              parsedRotation._x,
+              parsedRotation._y,
+              parsedRotation._z,
+              parsedRotation._order
+            )
+
+            return (
+              <ViewPoint
+                key={idx}
+                pos={pos}
+                rotation={rotation}
+                onClick={() => handleViewPointClick(pos, rotation)}
+              />
+            )
+          })}
         </Suspense>
       </Canvas>
     </>
