@@ -12,7 +12,7 @@ I thought it would be interesting to see if displaying the 3D models of the surv
 
 
 
-## Technical stack
+## Tech stack
 
 This project is designed to run locally, using a simple authentication method based on usernames. We used the [FormStrategy](https://github.com/sergiodxa/remix-auth-form) from Remix Auth for authentication. Although passwords are encrypted, this setup is not intended for production use.
 The database can be launched via Docker and is connected with Prisma.
