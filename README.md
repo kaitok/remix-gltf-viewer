@@ -1,4 +1,4 @@
-# gltf-viewer
+# remix-gltf-viewer
 
 ## Description
 
