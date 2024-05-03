@@ -1,44 +1,52 @@
 # gltf-viewer
 
 ## Description
-This project is final project for Harvard University's CS50.
-simple web viewer for 3d models.
-You can visualise 3d models on the web by uploading glTF files.
 
-It is also possible to write notes in the 3d file by creating a project. This idea was inspired by the deep-sea remains research project. They usually use a technique called photogrammetry to create a 3D model of the survey field from a series of photographs during fieldwork. 
-The idea was created to see if viewing and making notes on 3D models of the survey field could be used in research.
+This project, the final project for Harvard University's CS50, is a simple 3D viewer designed to display models on the web. Users can easily upload their own glTF files to visualize 3D models, and through project creation, they can create a viewpoint of the 3D model as note.
 
+This idea was inspired by a underwater research project. In that project, researchers typically create a 3D model from a series of photographs taken during fieldwork, using a technique known as photogrammetry.
+I thought it would be interesting to see if displaying the 3D models of the survey field and creating notes as observation points within them could be useful for research. Setting viewpoints within a 3D model can help with storytelling around a survey field. I believe it can be useful for various applications, including disaster investigation, mapping, construction surveys, and more.
 
 ## Technical stack
+
+This project is designed to run locally, using a simple authentication method based on usernames. We used the [FormStrategy](https://github.com/sergiodxa/remix-auth-form) from Remix Auth for authentication. Although passwords are encrypted, this setup is not intended for production use.
+The database can be launched via Docker and is connected with Prisma.
+Users can upload glTF files up to a maximum size of 1 GB, but the upload destination is a local disk.
+Implemented authorization to ensure that only the author of a project can access it.
+
 - Web framework: Remix - Full stack web framework with React
 - Database: Postgres(with Docker)
-- ORM: Prisma 
-- 3D viewer: three.js, React Three Fiber
-
+- ORM: Prisma
+- 3D: Three.js, React Three Fiber
+- Auth: Remix auth
 
 ## Features
-- Create project, archive and restore(Multiple selection for delete projects)
+
+The project management features in this application, like those in many other apps, include the ability to create, archive, and delete projects. Uploaded glTF files can be visualized with a 3D viewer, allowing users to move the camera around. By clicking at add viewpoints, users can record the current camera position as a note.
+
+- Manage projects (Create, Archive project)
 - glTF file uploading
-- Web 3d viewer with React Three Fiber
-- 3d camera control
-- adding annotation and note on 3D model
+- Web 3D viewer with React Three Fiber
+- 3D camera control
+- Adding viewpoint as a note on the 3D model
+- SignUp, login
 
 ## Project Demo
-
 
 ## Development
 
 ### Start database
 
-```sh
-docker copose up -d 
+```
+docker copose up -d
 ```
 
 ### Database setup
-create database in local postgresql 
+
 database name: gltf-viewer
 
 Crete env file and setup DATABASE_URL to connect postgresql
+
 ```
 cp .env.sample .env
 ```
@@ -51,6 +59,6 @@ npx prisma migrate dev
 
 ### Run server
 
-```sh
+```
 npm run dev
 ```
