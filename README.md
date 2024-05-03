@@ -12,7 +12,9 @@ I thought it would be interesting to see if displaying the 3D models of the surv
 
 
 
-https://github.com/kaitok/remix-gltf-viewer/assets/5301304/34d3ccd6-0b9d-4597-9b94-87d4f5dfe653
+
+https://github.com/kaitok/remix-gltf-viewer/assets/5301304/d5b512e9-c60c-40fc-9766-8cfdeddc8cc6
+
 
 
 
