@@ -18,7 +18,7 @@ Demo data: [19th-Century Shipwreck "15377" High Resolution by BOEM Archaeology](
 
 ## Tech stack
 
-This project is designed to run locally, using a simple authentication method based on usernames. We used the [FormStrategy](https://github.com/sergiodxa/remix-auth-form) from Remix Auth for authentication. Although passwords are encrypted, this setup is not intended for production use.
+This project is designed to run locally, using a simple authentication method based on usernames. used the [FormStrategy](https://github.com/sergiodxa/remix-auth-form) from Remix Auth for authentication. Although passwords are encrypted, this setup is not intended for production use.
 The database can be launched via Docker and is connected with Prisma.
 Users can upload glTF files up to a maximum size of 1 GB, but the upload destination is a local disk.
 Implemented authorization to ensure that only the author of a project can access it.
