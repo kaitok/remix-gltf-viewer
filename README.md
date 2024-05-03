@@ -11,11 +11,9 @@ This idea was inspired by a [underwater research project](https://suichukoukogak
 I thought it would be interesting to see if displaying the 3D models of the survey field and creating notes as observation points within them could be useful for research. Setting viewpoints within a 3D model can help with storytelling around a survey field. I believe it can be useful for various applications, including disaster investigation, mapping, construction surveys, and more.
 
 
-
-
 https://github.com/kaitok/remix-gltf-viewer/assets/5301304/d5b512e9-c60c-40fc-9766-8cfdeddc8cc6
 
-
+Demo data: [19th-Century Shipwreck "15377" High Resolution by BOEM Archaeology](https://sketchfab.com/BOEMArchaeology)
 
 
 ## Tech stack
