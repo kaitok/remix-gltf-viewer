@@ -12,6 +12,10 @@ I thought it would be interesting to see if displaying the 3D models of the surv
 
 
 
+https://github.com/kaitok/remix-gltf-viewer/assets/5301304/34d3ccd6-0b9d-4597-9b94-87d4f5dfe653
+
+
+
 ## Tech stack
 
 This project is designed to run locally, using a simple authentication method based on usernames. We used the [FormStrategy](https://github.com/sergiodxa/remix-auth-form) from Remix Auth for authentication. Although passwords are encrypted, this setup is not intended for production use.
