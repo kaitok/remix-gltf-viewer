@@ -1,4 +1,7 @@
 # remix-gltf-viewer
+<div align="center">
+<img src="https://github.com/kaitok/remix-gltf-viewer/assets/5301304/e84aad43-1f7d-4fa9-b92d-a42f59ae15df" width="700"/>
+</div>
 
 ## Description
 
@@ -6,6 +9,8 @@ This project, the final project for Harvard University's [CS50](https://pll.harv
 
 This idea was inspired by a [underwater research project](https://suichukoukogaku.com/). In that project, researchers typically create a 3D model from a series of photographs taken during fieldwork, using a technique known as photogrammetry.
 I thought it would be interesting to see if displaying the 3D models of the survey field and creating notes as observation points within them could be useful for research. Setting viewpoints within a 3D model can help with storytelling around a survey field. I believe it can be useful for various applications, including disaster investigation, mapping, construction surveys, and more.
+
+
 
 ## Technical stack
 
