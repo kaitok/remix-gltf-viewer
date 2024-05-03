@@ -58,10 +58,15 @@ export default function Index() {
           return (
             <Link
               to={'projects/' + v.id}
-              className="block truncate max-w-sm p-6 border bg-white border-gray-200 border-b-[1px] rounded-sm min-w-32"
+              className="block  max-w-sm p-6 border bg-white border-gray-200 border-b-[1px] rounded-sm min-w-32"
             >
-              <h5 className="text-xl tracking-tight text-gray-90">{v.title}</h5>
-              <p className="font-normal text-gray-700">{v.description}</p>
+              <div className="text-clip">
+                <h5 className="text-xl tracking-tight text-gray-90">
+                  {v.title}
+                </h5>
+
+                <p className="font-normal text-gray-700 ">{v.description}</p>
+              </div>
               <p> {dateFormat(v.createdAt)}</p>
             </Link>
           )
