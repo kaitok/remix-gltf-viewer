@@ -36,8 +36,6 @@ The project management features in this application, like those in many other ap
 - Adding viewpoint as a note on the 3D model
 - SignUp, login
 
-## Project Demo
-
 ## Development
 
 ### Start database
